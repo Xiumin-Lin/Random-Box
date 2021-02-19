@@ -1,3 +1,15 @@
 <resources>
     <string name="app_name">Random-Box</string>
+
+    <string name="number">Number</string>
+    <string name="color">Color</string>
+    <string name="movie">Movie</string>
+    <!--    <string-array name="categories">
+        <item>Number</item>
+        <item>Color</item>
+        <item>Movie</item>
+    </string-array>-->
+    <string name="info">Additional info page</string>
+    <string name="back">Back</string>
+    <string name="box_name">*Box name*</string>
 </resources>

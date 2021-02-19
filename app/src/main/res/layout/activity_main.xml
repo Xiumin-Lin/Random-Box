@@ -7,12 +7,81 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/titleMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Random Box"
+        android:autoSizeTextType="uniform"
+        android:text="@string/app_name"
+        android:textSize="36sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.089" />
+
+    <Button
+        android:id="@+id/btnNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="100dp"
+        android:text="@string/number"
+        android:onClick="onClickBtnBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleMain" />
+
+    <Button
+        android:id="@+id/btnMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/movie"
+        android:onClick="onClickBtnBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNumber" />
+
+    <Button
+        android:id="@+id/btnColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="50dp"
+        android:text="@string/color"
+        android:onClick="onClickBtnBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMovie" />
+
+    <TextView
+        android:id="@+id/textNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/number"
+        app:layout_constraintBottom_toBottomOf="@+id/btnNumber"
+        app:layout_constraintStart_toEndOf="@+id/btnNumber"
+        app:layout_constraintTop_toTopOf="@+id/btnNumber"
+        app:layout_constraintVertical_bias="0.482" />
+
+    <TextView
+        android:id="@+id/textColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/color"
+        app:layout_constraintBottom_toBottomOf="@+id/btnColor"
+        app:layout_constraintStart_toEndOf="@+id/btnColor"
+        app:layout_constraintTop_toTopOf="@+id/btnColor" />
+
+    <TextView
+        android:id="@+id/textMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/movie"
+        app:layout_constraintBottom_toBottomOf="@+id/btnMovie"
+        app:layout_constraintStart_toEndOf="@+id/btnMovie"
+        app:layout_constraintTop_toTopOf="@+id/btnMovie"
+        app:layout_constraintVertical_bias="0.413" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
