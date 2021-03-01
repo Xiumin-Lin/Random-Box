@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/jaguar"
     tools:context=".MainActivity">
 
     <TextView
@@ -83,5 +84,78 @@
         app:layout_constraintStart_toEndOf="@+id/btnMovie"
         app:layout_constraintTop_toTopOf="@+id/btnMovie"
         app:layout_constraintVertical_bias="0.413" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logo" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+
+        android:background="@color/white"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView">
+
+        <Button
+            android:id="@+id/box_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/salmon"
+            tools:layout_editor_absoluteX="245dp"
+            tools:layout_editor_absoluteY="259dp" />
+
+        <Button
+            android:id="@+id/box_4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/banana"
+            tools:layout_editor_absoluteX="245dp"
+            tools:layout_editor_absoluteY="375dp" />
+
+        <Button
+            android:id="@+id/box_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/cerulean"
+            tools:layout_editor_absoluteX="73dp"
+            tools:layout_editor_absoluteY="259dp" />
+
+        <Button
+            android:id="@+id/box_5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/lavender"
+            tools:layout_editor_absoluteX="73dp"
+            tools:layout_editor_absoluteY="488dp" />
+
+        <Button
+            android:id="@+id/box_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/melon"
+            tools:layout_editor_absoluteX="73dp"
+            tools:layout_editor_absoluteY="375dp" />
+
+        <Button
+            android:id="@+id/box_6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/perano"
+            tools:layout_editor_absoluteX="245dp"
+            tools:layout_editor_absoluteY="488dp" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

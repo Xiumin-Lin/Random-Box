@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Random-Box</string>
+    <string name="app_name">Random Box</string>
 
     <string name="number">Number</string>
     <string name="color">Color</string>
