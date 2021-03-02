@@ -15,8 +15,8 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
 public class MainActivity extends AppCompatActivity {
-//    private Button btnN, btnC, btnM;
-//    private TextView cptN, cptC, cptM;
+    private Button btnN, btnC, btnM;
+//    private TextView cptM;
     private DatabaseReference db;
     private MainActivity activity;
 
@@ -28,13 +28,12 @@ public class MainActivity extends AppCompatActivity {
         this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
 
-//        this.btnN = findViewById(R.id.btnNumber);
-//        this.cptN = findViewById(R.id.textNum);
-//
-//        this.btnC = findViewById(R.id.btnColor);
-//        this.cptC = findViewById(R.id.textColor);
-//
-//        this.btnM = findViewById(R.id.btnMovie);
+        this.btnN = findViewById(R.id.box_1);
+        this.btnN.setText(R.string.number);
+        this.btnC = findViewById(R.id.box_2);
+        this.btnC.setText(R.string.color);
+        this.btnM = findViewById(R.id.box_3);
+        this.btnM.setText(R.string.meal);
 //        this.cptM = findViewById(R.id.textMovie);
 
 //        this.btnN.setOnClickListener(new View.OnClickListener() {
@@ -76,33 +75,34 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickBtnBox(View view){
-        String box_name = "box_";
+        String box_name = "";
         switch (view.getId()){
-            case R.id.btnNumber:
+            case R.id.box_1:
                 box_name += "number";
                 break;
-            case R.id.btnColor:
+            case R.id.box_2:
                 box_name += "color";
                 break;
-            case R.id.btnMovie:
-                box_name += "movie";
+            case R.id.box_3:
+                box_name += "meal";
                 break;
             default:
                 return;
         }
         //increment stat of the selected box
-        db.child("stats").child(box_name).setValue(ServerValue.increment(1));
+        db.child("stats").child("box").child(box_name).setValue(ServerValue.increment(1));
 
-        if(view.getId() == R.id.btnNumber){
+        if(view.getId() == R.id.box_1){
             AlertDialog.Builder popup = new AlertDialog.Builder(activity);
-            popup.setTitle("Number Popup");
-            popup.setMessage("" + Box.getRandomNumber(4, 9));
+            popup.setTitle(box_name.toUpperCase());
+            popup.setMessage("" + Box.getRandomNumber());
             popup.show();
         }
 
-        if(view.getId() == R.id.btnMovie){
+        if(view.getId() == R.id.box_2){
             AlertDialog.Builder popup = new AlertDialog.Builder(activity);
-            popup.setTitle("Movie Popup");
+//            popup.setTitle(box_name.substring(0, 1).toUpperCase() + box_name.substring(1));   //Capitalize
+            popup.setTitle(box_name.toUpperCase());
             popup.setMessage("Info sur le le film : ...");
             popup.setNeutralButton("Get More Info", new DialogInterface.OnClickListener() {
                 @Override

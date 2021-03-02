@@ -1,9 +1,13 @@
 <resources>
     <string name="app_name">Random Box</string>
-
     <string name="number">Number</string>
     <string name="color">Color</string>
     <string name="movie">Movie</string>
+    <string name="meal">Meal</string>
+    <string name="stats">Statistics</string>
+    <string name="config">Configuration</string>
+    <string name="introduction">Are you bored ?
+        Then try one of these buttons</string>
     <!--    <string-array name="categories">
         <item>Number</item>
         <item>Color</item>
