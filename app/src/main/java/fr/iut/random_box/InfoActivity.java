@@ -10,15 +10,19 @@ import android.widget.TextView;
 
 public class InfoActivity extends AppCompatActivity {
     private Button btnBack;
-    //private TextView boxName;
+    private TextView boxName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
 
-        this.btnBack = findViewById(R.id.btnBack);
-        //this.boxName = findViewById(R.id.titleInfo);
+        this.btnBack = findViewById(R.id.btnInfoBack);
+        this.boxName = findViewById(R.id.txtInfoBoxName);
+
+        //set data send by activity_main
+        Intent intent = getIntent();
+        boxName.setText(intent.getStringExtra("box_name"));
 
         this.btnBack.setOnClickListener(new View.OnClickListener() {
             @Override

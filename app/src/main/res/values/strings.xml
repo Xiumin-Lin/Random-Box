@@ -1,19 +1,25 @@
 <resources>
+    <!-- Main Activity -->
     <string name="app_name">Random Box</string>
+    <string name="introduction">Are you bored ?
+        Then try one of these buttons</string>
     <string name="number">Number</string>
     <string name="color">Color</string>
     <string name="movie">Movie</string>
     <string name="meal">Meal</string>
     <string name="stats">Statistics</string>
     <string name="config">Configuration</string>
-    <string name="introduction">Are you bored ?
-        Then try one of these buttons</string>
+
     <!--    <string-array name="categories">
         <item>Number</item>
         <item>Color</item>
         <item>Movie</item>
     </string-array>-->
-    <string name="info">Additional info page</string>
+
+    <!-- Box Popup Window -->
+    <string name="popup_title">Box Popup Title</string>
+    <!-- Info Activity -->
+    <string name="info_title">To know no more !</string>
     <string name="back">Back</string>
-    <string name="box_name">*Box name*</string>
+
 </resources>

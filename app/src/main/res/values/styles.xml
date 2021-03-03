@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="rand_number">
+        <item name="android:textSize">150sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:gravity">center</item> <!-- Gravity is not working -->
+        <item name="android:layout_gravity">center</item>
+        <item name="android:textColor">@color/jaguar</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:background">@color/lavender</item> <!-- Same for Background -->
+    </style>
+</resources>
