@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popupLayout"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:maxWidth="300dp"
+    android:layout_margin="10dp"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="20dp"
+    android:background="@color/banana">
+
+    <TextView
+        android:id="@+id/txtPopTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/popup_title"
+        android:textAllCaps="true"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="@color/jaguar"/>
+
+    <TextView
+        android:id="@+id/txtPopBigNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="100sp"
+        android:maxWidth="300dp"
+        android:text="@string/example_number"
+        android:textSize="100sp"
+        android:textStyle="bold"
+        android:textColor="@color/jaguar"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtPopContentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="25sp"
+        android:layout_marginTop="10dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_title"
+        android:textColor="@color/jaguar"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtPopSubTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="20sp"
+        android:layout_marginTop="10dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_subtitle"
+        android:textColor="@color/jaguar"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imgPopContent"
+        android:layout_width="600px"
+        android:layout_height="600px"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/content_img"
+        android:visibility="gone"/>
+
+    <ScrollView
+        android:id="@+id/scrollPopDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/border_simple"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/txtPopDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="250dp"
+            android:maxWidth="300dp"
+            android:padding="10dp"
+            android:text="@string/longText"
+            android:textSize="12sp"
+            android:textColor="@color/jaguar"/>
+    </ScrollView>
+
+
+</LinearLayout>
