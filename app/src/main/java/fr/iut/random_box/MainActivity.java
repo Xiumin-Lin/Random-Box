@@ -17,42 +17,36 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 
+import java.util.ArrayList;
+import java.util.Collections;
+
 public class MainActivity extends AppCompatActivity {
-    private Button btnN, btnC, btnM;
-//    private TextView cptM;
+    private Button btnN;
     private DatabaseReference db;
     private MainActivity activity;
-
+    private static final int NUMBERBOX = 6;
+    ArrayList<String> listBox;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
-
-        this.btnN = findViewById(R.id.box_1);
-        this.btnN.setText(R.string.number);
-        this.btnC = findViewById(R.id.box_2);
-        this.btnC.setText(R.string.color);
-        this.btnM = findViewById(R.id.box_3);
-        this.btnM.setText(R.string.meal);
-        this.btnM = findViewById(R.id.box_4);
-        this.btnM.setText(R.string.movie);
+        shuffleBox(null);
     }
 
     /**
-     * Affiche dans une popup le contenu aléatoire d'une boîte lorsque l'user le click
-     * @param view : la view qui a appelé la methode
+     * Shows in a popup the content of the box
+     * @param view : the view that called the method
      */
     public void onClickBtnBox(View view){
         String box_name = "";
 
         switch (view.getId()){
-            case R.id.box_1: box_name += "number"; break;
-            case R.id.box_2: box_name += "color"; break;
-            case R.id.box_3: box_name += "meal"; break;
-            case R.id.box_4: box_name += "movie"; break;
+            case R.id.box_1: box_name += listBox.get(0); break;
+            case R.id.box_2: box_name += listBox.get(1); break;
+            case R.id.box_3: box_name += listBox.get(2); break;
+            case R.id.box_4: box_name += listBox.get(3); break;
             default: Log.d("rb", "Unknown box id"); return;
         }
         //increment stat of the selected box
@@ -72,13 +66,13 @@ public class MainActivity extends AppCompatActivity {
         //update custom layout components
         TextView title = popupView.findViewById(R.id.txtPopTitle);
         title.setText(box_name);
-        switch (view.getId()){
-            case R.id.box_1:
+        switch (box_name){
+            case "number":
                 TextView txtRandNumber = popupView.findViewById(R.id.txtPopBigNumber);
                 String randNum = "" + RandomBox.getRandomNumber();
                 txtRandNumber.setText(randNum);
                 txtRandNumber.setVisibility(View.VISIBLE); break;
-            case R.id.box_2:
+            case "color":
                 ImageView imgRandColor = popupView.findViewById(R.id.imgPopContent);
                 //convert px to dp
                 int _200dpInpx = (int) (200 * popupView.getResources().getDisplayMetrics().density);
@@ -90,9 +84,9 @@ public class MainActivity extends AppCompatActivity {
                 int randColor = RandomBox.getRandomColor();
                 imgRandColor.setBackgroundColor(randColor);
                 TextView txtCTitle = popupView.findViewById(R.id.txtPopContentTitle);
-                txtCTitle.setText("HEX = " + String.format("#%06X", (0xFFFFFF & randColor))); //covert int color to hex format
+                txtCTitle.setText("HEX = " + String.format("#%06X", (0xFFFFFF & randColor))); //convert int color to hex format
                 txtCTitle.setVisibility(View.VISIBLE); break;
-            case R.id.box_3:
+            case "meal":
                 ImageView imgContent = popupView.findViewById(R.id.imgPopContent);
                 String url = "https://cdn.myanimelist.net/images/anime/13/50521.jpg";
                 LoadImage loadImage = new LoadImage(imgContent);
@@ -109,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
 
                 View scrollView = popupView.findViewById(R.id.scrollPopDetail);
                 scrollView.setVisibility(View.VISIBLE);
-            case R.id.box_4: break;
+            case "movie": break;
             default: return;
         }
         if(view.getId() == R.id.box_3 || view.getId() == R.id.box_4){
@@ -125,6 +119,28 @@ public class MainActivity extends AppCompatActivity {
         //display popup
         AlertDialog popup = builder.create();
         popup.show();
+    }
+
+    public void shuffleBox(View v){
+
+        Log.d("rb", "run shuffleBox");
+        listBox = new ArrayList<String>();
+        listBox.add("number");
+        listBox.add("meal");
+        listBox.add("color");
+        listBox.add("movie");
+
+        Collections.shuffle(listBox);
+
+
+        this.btnN = findViewById(R.id.box_1);
+        this.btnN.setText(listBox.get(0));
+        this.btnN = findViewById(R.id.box_2);
+        this.btnN.setText(listBox.get(1));
+        this.btnN = findViewById(R.id.box_3);
+        this.btnN.setText(listBox.get(2));
+        this.btnN = findViewById(R.id.box_4);
+        this.btnN.setText(listBox.get(3));
     }
 
 }
