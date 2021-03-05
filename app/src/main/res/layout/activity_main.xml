@@ -12,11 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:contentDescription="@string/app_name"
+        android:onClick="shuffleBox"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutMain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo" />
+        app:srcCompat="@drawable/logo"
+        tools:ignore="OnClick" />
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
