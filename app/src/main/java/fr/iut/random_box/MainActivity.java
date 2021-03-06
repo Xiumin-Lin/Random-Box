@@ -3,9 +3,14 @@ package fr.iut.random_box;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
     private MainActivity activity;
     private static final int NUMBERBOX = 6;
     ArrayList<String> listBox;
+
+    private SensorManager mSensorManager;
+    private float mAccel; // acceleration apart from gravity
+    private float mAccelCurrent; // current acceleration including gravity
+    private float mAccelLast; // last acceleration including gravity
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,6 +44,12 @@ public class MainActivity extends AppCompatActivity {
         this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
         shuffleBox(null);
+
+        mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+        mAccel = 0.00f;
+        mAccelCurrent = SensorManager.GRAVITY_EARTH;
+        mAccelLast = SensorManager.GRAVITY_EARTH;
     }
 
     /**
@@ -121,6 +138,10 @@ public class MainActivity extends AppCompatActivity {
         popup.show();
     }
 
+    /**
+     * Shuffles the boxes position
+     * @param view : the view that called the method
+     */
     public void shuffleBox(View v){
 
         Log.d("rb", "run shuffleBox");
@@ -132,7 +153,6 @@ public class MainActivity extends AppCompatActivity {
 
         Collections.shuffle(listBox);
 
-
         this.btnN = findViewById(R.id.box_1);
         this.btnN.setText(listBox.get(0));
         this.btnN = findViewById(R.id.box_2);
@@ -141,6 +161,46 @@ public class MainActivity extends AppCompatActivity {
         this.btnN.setText(listBox.get(2));
         this.btnN = findViewById(R.id.box_4);
         this.btnN.setText(listBox.get(3));
+    }
+
+    private final SensorEventListener mSensorListener = new SensorEventListener() {
+
+        /**
+         * Detects the shake motion and call the shufflebox function
+         * @param se : the SensorEvent passed in parameter
+         */
+        public void onSensorChanged(SensorEvent se) {
+            float x = se.values[0];
+            float y = se.values[1];
+            float z = se.values[2];
+            mAccelLast = mAccelCurrent;
+            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            float delta = mAccelCurrent - mAccelLast;
+            mAccel = mAccel * 0.9f + delta; // perform low-cut filter
+
+            if (mAccel > 12) {
+                Log.d("rb", "device shaken");
+                shuffleBox(null);
+            }
+        }
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+            // ignore
+        }
+    };
+
+    @Override
+    protected void onResume() {
+        //
+        super.onResume();
+        mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
+    }
+
+    @Override
+    protected void onPause() {
+        //
+        mSensorManager.unregisterListener(mSensorListener);
+        super.onPause();
     }
 
 }
