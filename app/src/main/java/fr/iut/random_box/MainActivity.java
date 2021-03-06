@@ -191,14 +191,14 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onResume() {
-        //
+        // Activates the accelerometer
         super.onResume();
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
     protected void onPause() {
-        //
+        // Deactivates the accelerometer to saves resources
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
     }
