@@ -11,6 +11,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private MainActivity activity;
     private static final int NUMBERBOX = 6;
     ArrayList<String> listBox;
+    private MediaPlayer rollDiceSound; // Dice sound effect
+    private MediaPlayer waterDropSound; // Water drop sound effect
 
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
@@ -44,6 +47,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
+        rollDiceSound = MediaPlayer.create(this, R.raw.roll_dice);
+        waterDropSound = MediaPlayer.create(this, R.raw.water_drop);
         shuffleBox(null);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -59,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickBtnBox(View view){
         String box_name = "";
+        waterDropSound.start();
 
         switch (view.getId()){
             case R.id.box_1: box_name += listBox.get(0); break;
@@ -145,6 +151,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void shuffleBox(View v){
         Log.d("rb", "run shuffleBox");
+        rollDiceSound.start();
         listBox = new ArrayList<String>();
         listBox.add("number");
         listBox.add("meal");
@@ -152,6 +159,7 @@ public class MainActivity extends AppCompatActivity {
         listBox.add("movie");
         Collections.shuffle(listBox);
 
+        // Collect the array in the colors.xml as an array of int and put it into a List to shuffle
         int[] colorPalette = getResources().getIntArray(R.array.palette);
         List<Integer> colorList = new ArrayList<Integer>(colorPalette.length);
         for(int i : colorPalette) {
@@ -171,7 +179,6 @@ public class MainActivity extends AppCompatActivity {
         this.btnN = findViewById(R.id.box_4);
         this.btnN.setText(listBox.get(3));
         this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorList.get(3)));
-
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
