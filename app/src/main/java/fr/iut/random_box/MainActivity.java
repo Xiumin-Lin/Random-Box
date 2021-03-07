@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.ColorStateList;
-import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -25,7 +24,7 @@ import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnN;
@@ -142,10 +141,9 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Shuffles the boxes position
-     * @param view : the view that called the method
+     * @param v : the view that called the method
      */
     public void shuffleBox(View v){
-        int[] colorPalette = getResources().getIntArray(R.array.palette);
         Log.d("rb", "run shuffleBox");
         listBox = new ArrayList<String>();
         listBox.add("number");
@@ -154,18 +152,26 @@ public class MainActivity extends AppCompatActivity {
         listBox.add("movie");
         Collections.shuffle(listBox);
 
+        int[] colorPalette = getResources().getIntArray(R.array.palette);
+        List<Integer> colorList = new ArrayList<Integer>(colorPalette.length);
+        for(int i : colorPalette) {
+            colorList.add(i);
+        }
+        Collections.shuffle(colorList);
+
         this.btnN = findViewById(R.id.box_1);
         this.btnN.setText(listBox.get(0));
-        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorList.get(0)));
         this.btnN = findViewById(R.id.box_2);
         this.btnN.setText(listBox.get(1));
-        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorList.get(1)));
         this.btnN = findViewById(R.id.box_3);
         this.btnN.setText(listBox.get(2));
-        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorList.get(2)));
         this.btnN = findViewById(R.id.box_4);
         this.btnN.setText(listBox.get(3));
-        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorList.get(3)));
+
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
