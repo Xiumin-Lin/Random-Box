@@ -16,10 +16,13 @@
         android:id="@+id/txtPopTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:maxHeight="40dp"
         android:text="@string/popup_title"
         android:textAllCaps="true"
         android:textSize="30sp"
         android:textStyle="bold"
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
         android:textColor="@color/jaguar"/>
 
     <TextView
@@ -38,7 +41,7 @@
     <TextView
         android:id="@+id/txtPopContentTitle"
         android:layout_width="wrap_content"
-        android:layout_height="25sp"
+        android:layout_height="35sp"
         android:layout_marginTop="10dp"
         android:autoSizeTextType="uniform"
         android:gravity="center"
@@ -52,7 +55,7 @@
     <TextView
         android:id="@+id/txtPopSubTitle"
         android:layout_width="wrap_content"
-        android:layout_height="20sp"
+        android:layout_height="25sp"
         android:layout_marginTop="10dp"
         android:autoSizeTextType="uniform"
         android:gravity="center"
@@ -65,11 +68,26 @@
 
     <ImageView
         android:id="@+id/imgPopContent"
-        android:layout_width="600px"
-        android:layout_height="600px"
+        android:layout_width="wrap_content"
+        android:layout_height="200dp"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/content_img"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
         android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtPopContentInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="20sp"
+        android:layout_marginTop="10dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_subtitle"
+        android:textColor="@color/jaguar"
+        android:textSize="15sp"
+        android:visibility="gone" />
 
     <ScrollView
         android:id="@+id/scrollPopDetail"
@@ -80,10 +98,8 @@
         android:visibility="gone">
         <TextView
             android:id="@+id/txtPopDetail"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:minWidth="250dp"
-            android:maxWidth="300dp"
             android:padding="10dp"
             android:text="@string/longText"
             android:textSize="12sp"
