@@ -10,6 +10,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -47,12 +48,16 @@ public class MainActivity extends AppCompatActivity {
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
 
+    private MediaPlayer mpRollDice;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
+
+        mpRollDice = MediaPlayer.create(this, R.raw.roll_dice);
         shuffleBox();
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -141,9 +146,12 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onResponse(JSONObject response) {
                                 Log.d("rb", "res = " + response.toString());
-                                infoActivity.putExtra("jsonResponse", response.toString());
 
                                 try {
+                                    //Intent
+                                    infoActivity.putExtra("jsonResponse", response.getJSONArray("meals").getJSONObject(0).toString());
+
+                                    //Popup
                                     String titleMeal = response.getJSONArray("meals").getJSONObject(0).getString("strMeal");
                                     String categMeal = response.getJSONArray("meals").getJSONObject(0).getString("strCategory");
                                     String areaMeal = response.getJSONArray("meals").getJSONObject(0).getString("strArea");
@@ -159,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
                                     TextView categ = popupView.findViewById(R.id.txtPopSubTitle);
                                     categ.setText(categMeal);
                                     categ.setVisibility(View.VISIBLE);
-                                    TextView area = popupView.findViewById(R.id.txtPopContentInfo);
+                                    TextView area = popupView.findViewById(R.id.txtPopContentInfo1);
                                     area.setText(areaMeal);
                                     area.setVisibility(View.VISIBLE);
                                 } catch (JSONException e) {
@@ -205,6 +213,8 @@ public class MainActivity extends AppCompatActivity {
      * Shuffles the boxes position
      */
     public void shuffleBox(){
+        mpRollDice.start();
+        Log.d("rb", mpRollDice.toString());
         Log.d("rb", "run shuffleBox");
         listBox = new ArrayList<>();
         listBox.add("number");

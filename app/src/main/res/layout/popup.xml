@@ -63,7 +63,6 @@
         android:text="@string/content_subtitle"
         android:textColor="@color/jaguar"
         android:textSize="20sp"
-        android:textStyle="bold"
         android:visibility="gone" />
 
     <ImageView
@@ -77,16 +76,16 @@
         android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/txtPopContentInfo"
+        android:id="@+id/txtPopContentInfo1"
         android:layout_width="wrap_content"
-        android:layout_height="20sp"
+        android:layout_height="25sp"
         android:layout_marginTop="10dp"
         android:autoSizeTextType="uniform"
         android:gravity="center"
         android:maxWidth="300dp"
         android:text="@string/content_subtitle"
         android:textColor="@color/jaguar"
-        android:textSize="15sp"
+        android:textSize="20sp"
         android:visibility="gone" />
 
     <ScrollView
@@ -101,7 +100,7 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="@string/longText"
+            android:text="@string/content_longText"
             android:textSize="12sp"
             android:textColor="@color/jaguar"/>
     </ScrollView>

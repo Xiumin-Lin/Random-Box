@@ -23,7 +23,8 @@
         android:orientation="vertical"
         android:background="@color/white"
         android:gravity="center_horizontal"
-        android:padding="10dp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="30dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutNav"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,24 +41,70 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/txtInfoBoxName"
+            android:id="@+id/txtInfoContentTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Box Name"
+            android:layout_marginTop="10dp"
+            android:maxHeight="35dp"
+            android:text="@string/content_title"
+            android:textAllCaps="true"
             android:textSize="25sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:autoSizeTextType="uniform"
+            android:textColor="@color/salmon"/>
+
+        <TextView
+            android:id="@+id/txtInfoContentSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="35sp"
+            android:layout_marginTop="10dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:maxWidth="300dp"
+            android:text="@string/content_subtitle"
             android:textColor="@color/jaguar"
-            android:layout_marginTop="10dp"/>
+            android:textSize="25sp"/>
+
+        <ImageView
+            android:id="@+id/imgInfoContent"
+            android:layout_width="wrap_content"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
+            android:contentDescription="@string/content_img"
+            android:scaleType="fitXY"
+            android:adjustViewBounds="true"/>
+
+        <ListView
+            android:id="@+id/listInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+        </ListView>
+
+        <TextView
+            android:id="@+id/txtInfoField1"
+            android:layout_width="wrap_content"
+            android:layout_height="25sp"
+            android:layout_marginTop="10dp"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
+            android:maxWidth="300dp"
+            android:text="@string/content_info1"
+            android:textColor="@color/jaguar"
+            android:textSize="20sp" />
 
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="10dp">
+            android:layout_marginTop="10dp"
+            android:background="@drawable/border_simple">
             <TextView
-                android:id="@+id/txtInfoContent"
+                android:id="@+id/txtInfoContentScroll"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/jaguar"
-                android:layout_margin="10dp"/>
+                android:layout_margin="10dp"
+                android:textSize="12sp"
+                android:textColor="@color/jaguar" />
         </ScrollView>
 
     </LinearLayout>
