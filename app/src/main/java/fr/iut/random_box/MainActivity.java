@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -24,6 +25,7 @@ import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private Button btnN;
@@ -143,24 +145,27 @@ public class MainActivity extends AppCompatActivity {
      * @param view : the view that called the method
      */
     public void shuffleBox(View v){
-
+        int[] colorPalette = getResources().getIntArray(R.array.palette);
         Log.d("rb", "run shuffleBox");
         listBox = new ArrayList<String>();
         listBox.add("number");
         listBox.add("meal");
         listBox.add("color");
         listBox.add("movie");
-
         Collections.shuffle(listBox);
 
         this.btnN = findViewById(R.id.box_1);
         this.btnN.setText(listBox.get(0));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
         this.btnN = findViewById(R.id.box_2);
         this.btnN.setText(listBox.get(1));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
         this.btnN = findViewById(R.id.box_3);
         this.btnN.setText(listBox.get(2));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
         this.btnN = findViewById(R.id.box_4);
         this.btnN.setText(listBox.get(3));
+        this.btnN.setBackgroundTintList(ColorStateList.valueOf(colorPalette[new Random().nextInt(colorPalette.length)]));
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
