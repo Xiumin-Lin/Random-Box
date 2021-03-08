@@ -39,10 +39,10 @@ public class InfoActivity extends AppCompatActivity {
 //
 //            }
 
-            String titleMeal = "strMeal : " + jsonBox.getString("strMeal");
-            String categMeal = "strCategory : " + jsonBox.getString("strCategory");
-            String areaMeal = "strArea : " + jsonBox.getString("strArea");
-            String longMeal = "strInstructions :\n" + jsonBox.getString("strInstructions");
+            String titleMeal = jsonBox.getString("strMeal");
+            String categMeal = jsonBox.getString("strCategory");
+            String areaMeal = "Area : " + jsonBox.getString("strArea");
+            String longMeal = "Instructions :\n" + jsonBox.getString("strInstructions");
             String imgUrl = jsonBox.getString("strMealThumb");
             TextView t = findViewById(R.id.txtInfoContentScroll);
             t.setText(jsonBox.toString(4));
@@ -68,14 +68,11 @@ public class InfoActivity extends AppCompatActivity {
         } catch (JSONException e) {
             Log.d("rb", "Error while getting json data : " + e.getMessage());
         }
+    }
 
-        this.btnBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(mainActivity);
-                finish();
-            }
-        });
+    public void onClickBack(View view){
+        Intent mainActivity = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(mainActivity);
+        finish();
     }
 }

@@ -10,7 +10,7 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:contentDescription="@string/app_name"
         android:onClick="onClickLogo"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutMain"

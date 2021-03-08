@@ -34,14 +34,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnN;
     private DatabaseReference db;
     private MainActivity activity;
-    private static final int NUMBERBOX = 6;
-    ArrayList<String> listBox;
+    private static final int NB_MAX_BOX = 6;
+    private ArrayList<String> listBox = new ArrayList<>(Arrays.asList("number","meal","color","movie","anime","nasa"));;
+    private final ArrayList<Integer> boxIdList = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
 
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
 
-        mpRollDice = MediaPlayer.create(this, R.raw.roll_dice);
+        this.mpRollDice = MediaPlayer.create(this, R.raw.roll_dice);
         shuffleBox();
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -73,14 +74,17 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickBtnBox(View view){
         String box_name = "";
-
-        switch (view.getId()){
-            case R.id.box_1: box_name += listBox.get(0); break;
-            case R.id.box_2: box_name += listBox.get(1); break;
-            case R.id.box_3: box_name += listBox.get(2); break;
-            case R.id.box_4: box_name += listBox.get(3); break;
-            default: Log.d("rb", "Unknown box id"); return;
+        if(boxIdList.size() == 0)
+            return;
+        for(int i = 0; i < boxIdList.size(); i++){
+            if(view.getId() == boxIdList.get(i)){
+                box_name += listBox.get(i); break;
+            }
+            if(i == boxIdList.size() - 1){
+                Log.d("rb", "Unknown box id"); return;
+            }
         }
+
         //increment stat of the selected box
         db.child("stats").child("box").child(box_name).setValue(ServerValue.increment(1));
 
@@ -98,95 +102,42 @@ public class MainActivity extends AppCompatActivity {
         //update custom layout components
         TextView title = popupView.findViewById(R.id.txtPopTitle);
         title.setText(box_name);
+
         switch (box_name){
             case "number":
-                TextView txtRandNumber = popupView.findViewById(R.id.txtPopBigNumber);
-                String randNum = "" + RandomBox.getRandomNumber();
-                txtRandNumber.setText(randNum);
-                txtRandNumber.setVisibility(View.VISIBLE); break;
+                RandomBox.setPopupNumber(popupView); break;
             case "color":
-                ImageView imgRandColor = popupView.findViewById(R.id.imgPopContent);
-                //convert px to dp
-                int _200dpInpx = (int) (200 * popupView.getResources().getDisplayMetrics().density);
-                Log.d("rb", "200 dp = " + _200dpInpx + " px");
-                imgRandColor.getLayoutParams().height = _200dpInpx; //height receive px
-                imgRandColor.getLayoutParams().width = _200dpInpx;
-                imgRandColor.setVisibility(View.VISIBLE);
-
-                int randColor = RandomBox.getRandomColor();
-                imgRandColor.setBackgroundColor(randColor);
-                TextView txtCTitle = popupView.findViewById(R.id.txtPopContentTitle);
-                String hex = "HEX = " + String.format("#%06X", (0xFFFFFF & randColor));
-                txtCTitle.setText(hex); //convert int color to hex format
-                txtCTitle.setVisibility(View.VISIBLE); break;
+                RandomBox.setPopupColor(popupView); break;
             case "movie":
-                ImageView imgContent = popupView.findViewById(R.id.imgPopContent);
-                String imageUri = "https://cdn.myanimelist.net/images/anime/13/50521.jpg";
-//                LoadImage loadImage = new LoadImage(imgContent);
-//                loadImage.execute(url);
-                Picasso.get().load(imageUri).error(R.drawable.btn_blackheart).into(imgContent);
-                imgContent.setVisibility(View.VISIBLE);
-
-                TextView imgTitle = popupView.findViewById(R.id.txtPopContentTitle);
-                imgTitle.setText("Hyouka");
-                imgTitle.setVisibility(View.VISIBLE);
-
-                TextView subTitle = popupView.findViewById(R.id.txtPopSubTitle);
-                subTitle.setText("氷菓");
-                subTitle.setVisibility(View.VISIBLE);
-
-                View scrollView = popupView.findViewById(R.id.scrollPopDetail);
-                scrollView.setVisibility(View.VISIBLE); break;
+                RandomBox.setPopupMovie(popupView); break;
             case "meal":
                 String api_url ="https://www.themealdb.com/api/json/v1/1/random.php";
                 // Instantiate the RequestQueue.
                 RequestQueue queue = Volley.newRequestQueue(this);
-
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, api_url, null, new Response.Listener<JSONObject>() {
-                            @Override
-                            public void onResponse(JSONObject response) {
-                                Log.d("rb", "res = " + response.toString());
-
-                                try {
-                                    //Intent
-                                    infoActivity.putExtra("jsonResponse", response.getJSONArray("meals").getJSONObject(0).toString());
-
-                                    //Popup
-                                    String titleMeal = response.getJSONArray("meals").getJSONObject(0).getString("strMeal");
-                                    String categMeal = response.getJSONArray("meals").getJSONObject(0).getString("strCategory");
-                                    String areaMeal = response.getJSONArray("meals").getJSONObject(0).getString("strArea");
-                                    String imgUrl = response.getJSONArray("meals").getJSONObject(0).getString("strMealThumb");
-                                    if(!TextUtils.isEmpty(imgUrl)){
-                                        ImageView ivMeal = popupView.findViewById(R.id.imgPopContent);
-                                        Picasso.get().load(imgUrl).error(R.drawable.btn_blackheart).into(ivMeal);
-                                        ivMeal.setVisibility(View.VISIBLE);
-                                    }
-                                    TextView title = popupView.findViewById(R.id.txtPopTitle);
-                                    title.setText(titleMeal);
-                                    title.setVisibility(View.VISIBLE);
-                                    TextView categ = popupView.findViewById(R.id.txtPopSubTitle);
-                                    categ.setText(categMeal);
-                                    categ.setVisibility(View.VISIBLE);
-                                    TextView area = popupView.findViewById(R.id.txtPopContentInfo1);
-                                    area.setText(areaMeal);
-                                    area.setVisibility(View.VISIBLE);
-                                } catch (JSONException e) {
-                                    Log.e("rb", "JSON : " +  e.getMessage());
-                                }
-
-                            }
-                        }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                title.setText("That didn't work!");
-                            }
-                        });
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            //Intent
+                            infoActivity.putExtra("jsonResponse", response.getJSONArray("meals").getJSONObject(0).toString());
+                            RandomBox.setPopupMeal(popupView, response);
+                        } catch (JSONException e) {
+                            title.setText("Error in loading Meal data");
+                            Log.e("rb", "JSON Error : " +  e.getMessage());
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        title.setText("That didn't work!");
+                    }
+                });
                 // Add the request to the RequestQueue.
-                queue.add(jsonObjectRequest);
-                break;
-            default: return;
+                queue.add(jsonObjectRequest); break;
+            case "anime": RandomBox.setPopupAnime(popupView); break;
+            case "nasa": RandomBox.setPopupNASA(popupView); break;
         }
-        if(view.getId() == R.id.box_3 || view.getId() == R.id.box_4){
+        if(!box_name.equals("number") && !box_name.equals("color")){
             builder.setNeutralButton("Get More Info", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -213,25 +164,19 @@ public class MainActivity extends AppCompatActivity {
      * Shuffles the boxes position
      */
     public void shuffleBox(){
+        //Makes a rolling dice sound
+        Log.d("rb", "Rolling Dice");
         mpRollDice.start();
-        Log.d("rb", mpRollDice.toString());
-        Log.d("rb", "run shuffleBox");
-        listBox = new ArrayList<>();
-        listBox.add("number");
-        listBox.add("meal");
-        listBox.add("color");
-        listBox.add("movie");
 
+        //
+        Log.d("rb", "Shuffle All Box");
         Collections.shuffle(listBox);
 
-        this.btnN = findViewById(R.id.box_1);
-        this.btnN.setText(listBox.get(0));
-        this.btnN = findViewById(R.id.box_2);
-        this.btnN.setText(listBox.get(1));
-        this.btnN = findViewById(R.id.box_3);
-        this.btnN.setText(listBox.get(2));
-        this.btnN = findViewById(R.id.box_4);
-        this.btnN.setText(listBox.get(3));
+        Button btnBox;
+        for(int i = 0; i < NB_MAX_BOX; i++){
+            btnBox = findViewById(boxIdList.get(i));
+            btnBox.setText(listBox.get(i));
+        }
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
