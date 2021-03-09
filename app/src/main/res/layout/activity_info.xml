@@ -56,41 +56,27 @@
 
         <TextView
             android:id="@+id/txtInfoContentSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="25sp"
-            android:autoSizeTextType="uniform"
+            style="@style/simpleText"
             android:gravity="center"
             android:maxWidth="300dp"
             android:text="@string/content_subtitle"
-            android:textColor="@color/jaguar"
-            android:textSize="20sp"/>
+            android:visibility="visible" />
 
         <ImageView
             android:id="@+id/imgInfoContent"
             android:layout_width="wrap_content"
             android:layout_height="180dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginVertical="5dp"
             android:contentDescription="@string/content_img"
             android:scaleType="fitXY"
             android:adjustViewBounds="true"/>
 
         <ListView
             android:id="@+id/listInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </ListView>
-
-        <TextView
-            android:id="@+id/txtInfoField1"
             android:layout_width="wrap_content"
-            android:layout_height="25sp"
-            android:layout_marginTop="10dp"
-            android:autoSizeTextType="uniform"
-            android:gravity="center"
-            android:maxWidth="300dp"
-            android:text="@string/content_info1"
-            android:textColor="@color/jaguar"
-            android:textSize="20sp" />
+            android:layout_height="50dp"
+            android:layout_gravity="center">
+        </ListView>
 
         <ScrollView
             android:layout_width="match_parent"

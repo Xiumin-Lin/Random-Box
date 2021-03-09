@@ -1,7 +1,6 @@
 package fr.iut.random_box;
 
 import android.graphics.Color;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -76,7 +75,7 @@ public class RandomBox {
         Log.d("rb", "Set Color Box");
         ImageView imgRandColor = popupView.findViewById(R.id.imgPopContent);
 
-        //convert px to dp
+        //setup imageView & convert px to dp
         int _200dpInpx = (int) (200 * popupView.getResources().getDisplayMetrics().density);
         Log.d("rb", "200 dp = " + _200dpInpx + " px");
         imgRandColor.getLayoutParams().height = _200dpInpx; //height receive px
@@ -91,7 +90,7 @@ public class RandomBox {
         setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), hex);
     }
 
-    public static void setPopupMovie(View popupView) {
+    public static void setPopupMovie(View popupView, JSONObject response) {
         String url = "https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg";
         setImgViewURL(popupView.findViewById(R.id.imgPopContent), url);
 
@@ -99,21 +98,18 @@ public class RandomBox {
     }
 
     public static void setPopupMeal(View popupView, JSONObject response) throws JSONException {
-        //Popup
-        String titleMeal = response.getJSONArray("meals").getJSONObject(0).getString("strMeal");
-        String categMeal = response.getJSONArray("meals").getJSONObject(0).getString("strCategory");
-        String areaMeal = response.getJSONArray("meals").getJSONObject(0).getString("strArea");
-        String imgUrl = response.getJSONArray("meals").getJSONObject(0).getString("strMealThumb");
+        String imgUrl = response.getString("strMealThumb");
+        String title = response.getString("strMeal");
+        String category = response.getString("strCategory");
+        String area = response.getString("strArea");
 
-        if(!TextUtils.isEmpty(imgUrl)){
-            setImgViewURL(popupView.findViewById(R.id.imgPopContent), imgUrl);
-        }
-        setTextViewContent(popupView.findViewById(R.id.txtPopTitle), titleMeal);
-        setTextViewContent(popupView.findViewById(R.id.txtPopSubTitle), categMeal);
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentInfo1), areaMeal);
+        setImgViewURL(popupView.findViewById(R.id.imgPopContent), imgUrl);
+        setTextViewContent(popupView.findViewById(R.id.txtPopTitle), title);
+        setTextViewContent(popupView.findViewById(R.id.txtPopSubTitle), category);
+        setTextViewContent(popupView.findViewById(R.id.txtPopContentInfo1), area);
     }
 
-    public static void setPopupAnime(View popupView) {
+    public static void setPopupAnime(View popupView, JSONObject response) {
         String imageUri = "https://cdn.myanimelist.net/images/anime/13/50521.jpg";
         setImgViewURL(popupView.findViewById(R.id.imgPopContent), imageUri);
 
@@ -124,13 +120,17 @@ public class RandomBox {
         scrollView.setVisibility(View.VISIBLE);
     }
 
-    public static void setPopupNASA(View popupView) {
-        ImageView imgContent = popupView.findViewById(R.id.imgPopContent);
-        String imageUri = "https://apod.nasa.gov/apod/image/2103/M16Ir_HubbleRomero_2786.jpg";
-        Picasso.get().load(imageUri).error(R.drawable.btn_blackheart).into(imgContent);
-        imgContent.setVisibility(View.VISIBLE);
-
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), "Pillars of the Eagle Nebula in Infrared");
+    public static void setPopupNASA(View popupView, JSONObject response) throws JSONException {
+        String imgUrl = response.getString("url");
+        String title = response.getString("title");
+        String date = response.getString("date");
+        if(response.has("copyright")){ //the copyright is not always here
+            String copyright = response.getString("copyright");
+            setTextViewContent(popupView.findViewById(R.id.txtPopSubTitle), "(c) : " + copyright);
+        }
+        setImgViewURL(popupView.findViewById(R.id.imgPopContent), imgUrl);
+        setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), title);
+        setTextViewContent(popupView.findViewById(R.id.txtPopContentInfo1), date);
     }
 
 

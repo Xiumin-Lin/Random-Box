@@ -12,24 +12,23 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
-import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -38,12 +37,13 @@ import java.util.Arrays;
 import java.util.Collections;
 
 public class MainActivity extends AppCompatActivity {
-    private DatabaseReference db;
-    private MainActivity activity;
     private static final int NB_MAX_BOX = 6;
-    private ArrayList<String> listBox = new ArrayList<>(Arrays.asList("number","meal","color","movie","anime","nasa"));;
-    private final ArrayList<Integer> boxIdList = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
+    private final DatabaseReference DB_STATS = FirebaseDatabase.getInstance().getReference("stats");
+    private final ArrayList<String> NAME_BOX_LIST = new ArrayList<>(Arrays.asList("number","color","meal","movie","anime","astronomy"));
+    private final ArrayList<String> NO_INFO_BOX_LIST = new ArrayList<>(Arrays.asList("number","color"));
+    private final ArrayList<Integer> BOX_ID_LIST = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
 
+    private MainActivity activity;
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
@@ -55,11 +55,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
 
         this.mpRollDice = MediaPlayer.create(this, R.raw.roll_dice);
-        shuffleBox();
+        shuffleBox(); //displays the box randomly
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
@@ -73,24 +72,20 @@ public class MainActivity extends AppCompatActivity {
      * @param view : the view that called the method
      */
     public void onClickBtnBox(View view){
-        String box_name = "";
-        if(boxIdList.size() == 0)
+        Button btn = (Button) view;
+        String box_name = btn.getText().toString();
+        Log.d("rb", "Open " + box_name + " box");
+        if(!NAME_BOX_LIST.contains(box_name)){
+            Log.d("rb", "Unknown box id");
             return;
-        for(int i = 0; i < boxIdList.size(); i++){
-            if(view.getId() == boxIdList.get(i)){
-                box_name += listBox.get(i); break;
-            }
-            if(i == boxIdList.size() - 1){
-                Log.d("rb", "Unknown box id"); return;
-            }
         }
 
         //increment stat of the selected box
-        db.child("stats").child("box").child(box_name).setValue(ServerValue.increment(1));
+        DB_STATS.child("box").child(box_name).setValue(ServerValue.increment(1));
 
         //create & set intent
         Intent infoActivity = new Intent(getApplicationContext(), InfoActivity.class);
-        infoActivity.putExtra("box_name", box_name);
+        infoActivity.putExtra("box_name", box_name); //TODO
 
         //create box popup builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this); //activity
@@ -103,24 +98,27 @@ public class MainActivity extends AppCompatActivity {
         TextView title = popupView.findViewById(R.id.txtPopTitle);
         title.setText(box_name);
 
+        // Instantiate the RequestQueue.
+        RequestQueue queue = Volley.newRequestQueue(this);
+
         switch (box_name){
             case "number":
                 RandomBox.setPopupNumber(popupView); break;
             case "color":
                 RandomBox.setPopupColor(popupView); break;
             case "movie":
-                RandomBox.setPopupMovie(popupView); break;
+                JSONObject responseMovie = null; //TODO
+                RandomBox.setPopupMovie(popupView, responseMovie); break;
             case "meal":
                 String api_url ="https://www.themealdb.com/api/json/v1/1/random.php";
-                // Instantiate the RequestQueue.
-                RequestQueue queue = Volley.newRequestQueue(this);
                 JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, api_url, null, new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
                             //Intent
                             infoActivity.putExtra("jsonResponse", response.getJSONArray("meals").getJSONObject(0).toString());
-                            RandomBox.setPopupMeal(popupView, response);
+                            Log.d("rb", response.getJSONArray("meals").getJSONObject(0).toString());
+                            RandomBox.setPopupMeal(popupView, response.getJSONArray("meals").getJSONObject(0));
                         } catch (JSONException e) {
                             title.setText("Error in loading Meal data");
                             Log.e("rb", "JSON Error : " +  e.getMessage());
@@ -134,10 +132,37 @@ public class MainActivity extends AppCompatActivity {
                 });
                 // Add the request to the RequestQueue.
                 queue.add(jsonObjectRequest); break;
-            case "anime": RandomBox.setPopupAnime(popupView); break;
-            case "nasa": RandomBox.setPopupNASA(popupView); break;
+            case "anime":
+                JSONObject response = null; //TODO
+                RandomBox.setPopupAnime(popupView, response); break;
+            case "astronomy":
+                String api_nasa_url ="https://api.nasa.gov/planetary/apod?api_key=Y9Sgb5jB9MEdU6PLamtugrPCJ53cMSlHd2bUmSl9&count=1";
+                JsonArrayRequest jsonNasaObjectRequest = new JsonArrayRequest(Request.Method.GET, api_nasa_url, null, new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray response) {
+                        try {
+                            //Intent
+                            infoActivity.putExtra("jsonResponse", response.getJSONObject(0).toString());
+                            Log.d("rb", "NASA = " + response.getJSONObject(0).toString());
+                            RandomBox.setPopupNASA(popupView, response.getJSONObject(0));
+                        } catch (JSONException e) {
+                            title.setText("Error in loading Meal data");
+                            Log.e("rb", "JSON Error : " +  e.getMessage());
+                        }
+
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        title.setText("That didn't work!");
+                        Log.d("rb", "Error NASA " + error.getMessage());
+                    }
+                });
+                // Add the request to the RequestQueue.
+                queue.add(jsonNasaObjectRequest); break;
         }
-        if(!box_name.equals("number") && !box_name.equals("color")){
+
+        if(!NO_INFO_BOX_LIST.contains(box_name)){
             builder.setNeutralButton("Get More Info", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -170,12 +195,12 @@ public class MainActivity extends AppCompatActivity {
 
         //
         Log.d("rb", "Shuffle All Box");
-        Collections.shuffle(listBox);
+        Collections.shuffle(NAME_BOX_LIST);
 
         Button btnBox;
         for(int i = 0; i < NB_MAX_BOX; i++){
-            btnBox = findViewById(boxIdList.get(i));
-            btnBox.setText(listBox.get(i));
+            btnBox = findViewById(BOX_ID_LIST.get(i));
+            btnBox.setText(NAME_BOX_LIST.get(i));
         }
     }
 

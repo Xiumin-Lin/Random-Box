@@ -54,21 +54,16 @@
 
     <TextView
         android:id="@+id/txtPopSubTitle"
-        android:layout_width="wrap_content"
-        android:layout_height="25sp"
-        android:layout_marginTop="10dp"
-        android:autoSizeTextType="uniform"
+        style="@style/simpleText"
         android:gravity="center"
         android:maxWidth="300dp"
         android:text="@string/content_subtitle"
-        android:textColor="@color/jaguar"
-        android:textSize="20sp"
         android:visibility="gone" />
 
     <ImageView
         android:id="@+id/imgPopContent"
         android:layout_width="wrap_content"
-        android:layout_height="200dp"
+        android:layout_height="250dp"
         android:layout_marginTop="10dp"
         android:contentDescription="@string/content_img"
         android:scaleType="fitXY"
@@ -77,15 +72,20 @@
 
     <TextView
         android:id="@+id/txtPopContentInfo1"
-        android:layout_width="wrap_content"
-        android:layout_height="25sp"
+        style="@style/simpleText"
         android:layout_marginTop="10dp"
-        android:autoSizeTextType="uniform"
         android:gravity="center"
         android:maxWidth="300dp"
-        android:text="@string/content_subtitle"
-        android:textColor="@color/jaguar"
-        android:textSize="20sp"
+        android:text="@string/content_txt"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtPopContentInfo2"
+        style="@style/simpleText"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_txt"
         android:visibility="gone" />
 
     <ScrollView
