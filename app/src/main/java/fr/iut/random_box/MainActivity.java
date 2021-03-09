@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         String box_name = btn.getText().toString();
         Log.d("rb", "Open " + box_name + " box");
         if(!NAME_BOX_LIST.contains(box_name)){
-            Log.d("rb", "Unknown box id");
+            Log.d("rb", "Unknown box name");
             return;
         }
 
@@ -98,68 +98,20 @@ public class MainActivity extends AppCompatActivity {
         TextView title = popupView.findViewById(R.id.txtPopTitle);
         title.setText(box_name);
 
-        // Instantiate the RequestQueue.
-        RequestQueue queue = Volley.newRequestQueue(this);
-
-        switch (box_name){
-            case "number":
-                RandomBox.setPopupNumber(popupView); break;
-            case "color":
-                RandomBox.setPopupColor(popupView); break;
-            case "movie":
-                JSONObject responseMovie = null; //TODO
-                RandomBox.setPopupMovie(popupView, responseMovie); break;
-            case "meal":
-                String api_url ="https://www.themealdb.com/api/json/v1/1/random.php";
-                JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.POST, api_url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            //Intent
-                            infoActivity.putExtra("jsonResponse", response.getJSONArray("meals").getJSONObject(0).toString());
-                            Log.d("rb", response.getJSONArray("meals").getJSONObject(0).toString());
-                            RandomBox.setPopupMeal(popupView, response.getJSONArray("meals").getJSONObject(0));
-                        } catch (JSONException e) {
-                            title.setText("Error in loading Meal data");
-                            Log.e("rb", "JSON Error : " +  e.getMessage());
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        title.setText("That didn't work!");
-                    }
-                });
-                // Add the request to the RequestQueue.
-                queue.add(jsonObjectRequest); break;
-            case "anime":
-                JSONObject response = null; //TODO
-                RandomBox.setPopupAnime(popupView, response); break;
-            case "astronomy":
-                String api_nasa_url ="https://api.nasa.gov/planetary/apod?api_key=Y9Sgb5jB9MEdU6PLamtugrPCJ53cMSlHd2bUmSl9&count=1";
-                JsonArrayRequest jsonNasaObjectRequest = new JsonArrayRequest(Request.Method.GET, api_nasa_url, null, new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray response) {
-                        try {
-                            //Intent
-                            infoActivity.putExtra("jsonResponse", response.getJSONObject(0).toString());
-                            Log.d("rb", "NASA = " + response.getJSONObject(0).toString());
-                            RandomBox.setPopupNASA(popupView, response.getJSONObject(0));
-                        } catch (JSONException e) {
-                            title.setText("Error in loading Meal data");
-                            Log.e("rb", "JSON Error : " +  e.getMessage());
-                        }
-
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        title.setText("That didn't work!");
-                        Log.d("rb", "Error NASA " + error.getMessage());
-                    }
-                });
-                // Add the request to the RequestQueue.
-                queue.add(jsonNasaObjectRequest); break;
+        RandomBox randomBox = RandomBoxFactory.buildBox(box_name);
+        if(!randomBox.needAPI()){
+            randomBox.setPopupView(popupView);
+        }
+        else {
+            // Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(this);
+            String api_url = randomBox.getApiUrl();
+            // Add the request to the RequestQueue.
+            if(randomBox.hasJsonObject()){
+                queue.add(randomBox.makeJsonObjectRequest(popupView, infoActivity));
+            } else {
+                queue.add(randomBox.makeJsonArrayRequest(popupView, infoActivity));
+            }
         }
 
         if(!NO_INFO_BOX_LIST.contains(box_name)){

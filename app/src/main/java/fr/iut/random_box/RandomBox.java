@@ -1,5 +1,6 @@
 package fr.iut.random_box;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.JsonRequest;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,17 +30,108 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-public class RandomBox {
-    public RandomBox(){}
+public abstract class RandomBox {
+    public static String name = "randomBox";
+    private String apiUrl = "";
+    private Boolean hasJsonObject = true;
 
     /**
-     * @return a random number between 0 & 100
+     * The box no need api to work
      */
-    public static int getRandomNumber(){ return (new Random()).nextInt(101); }
+    public RandomBox(String name){
+        RandomBox.name = name;
+    }
 
-    public static int getRandomColor(){
-        Random rnd = new Random();
-        return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
+    public RandomBox(String name, String apiUrl, Boolean hasJsonObject){
+        this(name);
+        this.apiUrl = apiUrl;
+        if(!apiUrl.isEmpty()){
+            this.hasJsonObject = hasJsonObject;
+        }
+    }
+
+    public Boolean needAPI(){
+        return !apiUrl.isEmpty();
+    }
+
+    public String getApiUrl() {
+        return apiUrl;
+    }
+
+    public Boolean hasJsonObject(){
+        return hasJsonObject;
+    }
+
+    /**
+     * Set popup view for box which don't need API
+     * @param popupView
+     */
+    public void setPopupView(View popupView){
+        Log.d("rb", "Set " + name + " Box in Popup View");
+    }
+
+    /**
+     * Set popup view for box which require API to work
+     * @param popupView
+     * @param json the json response on success of the request to the API
+     */
+    public void setPopupView(View popupView, JSONObject json) throws JSONException {
+        Log.d("rb", "Set " + name + " Box in Popup View");
+    }
+
+    /**
+     * Set Info activity for box which require API
+     * @param infoView the InfoActivity
+     * @param json the json response on success of the request to the API
+     */
+    public void setInfoView(View infoView, JSONObject json){
+        if(!needAPI()){
+            Log.d("rb", name + " Box don't have more info");
+            return;
+        }
+        Log.d("rb", "Set " + name + " Box in Info Activity");
+    }
+
+    public JsonObjectRequest makeJsonObjectRequest(View popupView, Intent infoActivity){
+        return new JsonObjectRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    //Intent
+                    infoActivity.putExtra("jsonResponse", response.toString());
+                    Log.d("rb", name + " JSON = " + response.toString());
+                    setPopupView(popupView, response);
+                } catch (JSONException e) {
+                    Log.e("rb", name + " JSONObject Error : " +  e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("rb", name + " JSONObject Request FAIL : " + error.getMessage());
+            }
+        });
+    }
+
+    public JsonArrayRequest makeJsonArrayRequest(View popupView, Intent infoActivity){
+        return new JsonArrayRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    //Intent
+                    infoActivity.putExtra("jsonResponse", response.getJSONObject(0).toString());
+                    Log.d("rb", name + " JSON = " + response.getJSONObject(0).toString());
+                    setPopupView(popupView, response.getJSONObject(0));
+                } catch (JSONException e) {
+                    Log.e("rb", name + " JSONArray Error : " +  e.getMessage());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.e("rb", name + " JSONArray Request FAIL : " + error.getMessage());
+            }
+        });
     }
 
     public static ArrayList<String> getAllBoxName(){
@@ -56,82 +155,13 @@ public class RandomBox {
         return boxNameList;
     }
 
-    private static void setTextViewContent(TextView textViewById, String text) {
+    public static void setTextViewContent(TextView textViewById, String text) {
         textViewById.setText(text);
         textViewById.setVisibility(View.VISIBLE);
     }
 
-    private static void setImgViewURL(ImageView textViewById, String url) {
+    public static void setImgViewURL(ImageView textViewById, String url) {
         Picasso.get().load(url).error(R.drawable.btn_blackheart).into(textViewById);
         textViewById.setVisibility(View.VISIBLE);
     }
-
-    public static void setPopupNumber(View popupView) {
-        Log.d("rb", "Set Number Box");
-        setTextViewContent(popupView.findViewById(R.id.txtPopBigNumber), "" + RandomBox.getRandomNumber());
-    }
-
-    public static void setPopupColor(View popupView) {
-        Log.d("rb", "Set Color Box");
-        ImageView imgRandColor = popupView.findViewById(R.id.imgPopContent);
-
-        //setup imageView & convert px to dp
-        int _200dpInpx = (int) (200 * popupView.getResources().getDisplayMetrics().density);
-        Log.d("rb", "200 dp = " + _200dpInpx + " px");
-        imgRandColor.getLayoutParams().height = _200dpInpx; //height receive px
-        imgRandColor.getLayoutParams().width = _200dpInpx;
-
-        int randColor = RandomBox.getRandomColor();
-        imgRandColor.setBackgroundColor(randColor);
-        imgRandColor.setVisibility(View.VISIBLE);
-
-        //convert int color to hex format string
-        String hex = "HEX : " + String.format("#%06X", (0xFFFFFF & randColor));
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), hex);
-    }
-
-    public static void setPopupMovie(View popupView, JSONObject response) {
-        String url = "https://m.media-amazon.com/images/M/MV5BNjM0NTc0NzItM2FlYS00YzEwLWE0YmUtNTA2ZWIzODc2OTgxXkEyXkFqcGdeQXVyNTgwNzIyNzg@._V1_SX300.jpg";
-        setImgViewURL(popupView.findViewById(R.id.imgPopContent), url);
-
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), "Guardians of the Galaxy Vol. 2");
-    }
-
-    public static void setPopupMeal(View popupView, JSONObject response) throws JSONException {
-        String imgUrl = response.getString("strMealThumb");
-        String title = response.getString("strMeal");
-        String category = response.getString("strCategory");
-        String area = response.getString("strArea");
-
-        setImgViewURL(popupView.findViewById(R.id.imgPopContent), imgUrl);
-        setTextViewContent(popupView.findViewById(R.id.txtPopTitle), title);
-        setTextViewContent(popupView.findViewById(R.id.txtPopSubTitle), category);
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentInfo1), area);
-    }
-
-    public static void setPopupAnime(View popupView, JSONObject response) {
-        String imageUri = "https://cdn.myanimelist.net/images/anime/13/50521.jpg";
-        setImgViewURL(popupView.findViewById(R.id.imgPopContent), imageUri);
-
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), "Hyouka");
-        setTextViewContent(popupView.findViewById(R.id.txtPopSubTitle), "氷菓");
-
-        View scrollView = popupView.findViewById(R.id.scrollPopDetail);
-        scrollView.setVisibility(View.VISIBLE);
-    }
-
-    public static void setPopupNASA(View popupView, JSONObject response) throws JSONException {
-        String imgUrl = response.getString("url");
-        String title = response.getString("title");
-        String date = response.getString("date");
-        if(response.has("copyright")){ //the copyright is not always here
-            String copyright = response.getString("copyright");
-            setTextViewContent(popupView.findViewById(R.id.txtPopSubTitle), "(c) : " + copyright);
-        }
-        setImgViewURL(popupView.findViewById(R.id.imgPopContent), imgUrl);
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), title);
-        setTextViewContent(popupView.findViewById(R.id.txtPopContentInfo1), date);
-    }
-
-
 }

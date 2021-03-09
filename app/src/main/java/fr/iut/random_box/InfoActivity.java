@@ -50,8 +50,6 @@ public class InfoActivity extends AppCompatActivity {
             title.setText(titleMeal);
 //            TextView categ = findViewById(R.id.txtInfoContentSubtitle);
 //            categ.setText(categMeal);
-//            TextView area = findViewById(R.id.txtInfoField1);
-//            area.setText(areaMeal);
             TextView longtext = findViewById(R.id.txtInfoContentScroll);
             longtext.setText(longMeal);
 
