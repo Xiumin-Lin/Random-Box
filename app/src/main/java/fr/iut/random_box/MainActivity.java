@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -19,8 +18,11 @@ import com.google.firebase.database.ServerValue;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+
 
 public class MainActivity extends AppCompatActivity {
+    private TextView stats;
     private Button btnN;
     private DatabaseReference db;
     private MainActivity activity;
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         this.db = FirebaseDatabase.getInstance().getReference();
         this.activity = this;
         shuffleBox(null);
+        RandomBox.updateStats();
     }
 
     /**
@@ -121,6 +124,21 @@ public class MainActivity extends AppCompatActivity {
         popup.show();
     }
 
+    /**
+     * Creates the popup with statistics when the button stats is clicked on
+     * @param view : the view that called the method
+     */
+    public void onClickStats(View view){
+        //setContentView(R.layout.popup);
+        HashMap<String, String> statistiques= RandomBox.getStats();
+        Log.d("rb", statistiques.toString());
+    }
+
+
+    /**
+     * Shuffles the boxes on the graphic view
+     * @param v : the view that called the method
+     */
     public void shuffleBox(View v){
 
         Log.d("rb", "run shuffleBox");

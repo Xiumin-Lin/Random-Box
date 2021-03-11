@@ -17,8 +17,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/logo"
-        tools:ignore="OnClick" />
+        app:srcCompat="@drawable/logo"/>
 
     <LinearLayout
         android:id="@+id/linearLayoutMain"
@@ -148,6 +147,7 @@
             android:text="@string/stats"
             android:textAllCaps="false"
             android:backgroundTint="@color/white"
+            android:onClick="onClickStats"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"

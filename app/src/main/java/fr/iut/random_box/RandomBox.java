@@ -1,7 +1,19 @@
 package fr.iut.random_box;
 
 import android.graphics.Color;
+import android.util.Log;
 
+import androidx.annotation.NonNull;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 
 public class RandomBox {
@@ -19,6 +31,33 @@ public class RandomBox {
         Random rnd = new Random();
         return Color.argb(255, rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256));
     }
+    private static HashMap<String, String> statsList = new HashMap<>();
+    /**
+     * retrieves the statistics from the database
+     */
+    public static void updateStats(){
 
+        DatabaseReference dbBox = FirebaseDatabase.getInstance().getReference("stats/box");
+        dbBox.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                statsList.clear();
+                for(DataSnapshot child: snapshot.getChildren()){
+                    statsList.put(child.getKey(), child.getValue().toString());
+                }
+                Log.d("rb", statsList.toString()+"data change");
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("rb", "getStats cancelled : "+error.getMessage());
+            }
+        });
+    }
+    /**
+     * Returns the statistics of the boxes
+     */
+    public static HashMap<String, String> getStats() {
+        return statsList;
+    }
 }
