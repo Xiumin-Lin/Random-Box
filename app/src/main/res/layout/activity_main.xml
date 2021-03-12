@@ -144,12 +144,13 @@
         style="?android:attr/buttonBarStyle">
         <Button
             android:id="@+id/btnStats"
-            android:text="@string/stats"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
+            android:text="@string/stats"
+            android:textAllCaps="false"
+            android:backgroundTint="@color/white"
+            android:onClick="onClickStats"
             style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 

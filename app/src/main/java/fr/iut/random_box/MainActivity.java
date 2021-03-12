@@ -1,5 +1,6 @@
 package fr.iut.random_box;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,17 +17,22 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
     private static final int NB_MAX_BOX = 6;
@@ -35,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<String> STANDALONE_BOX_LIST = new ArrayList<>(Arrays.asList("number","color"));
     private final ArrayList<Integer> BOX_ID_LIST = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
 
-    private MainActivity activity;
+    private MainActivity mainActivity;
     private MediaPlayer rollDiceSound; // Dice sound effect
     private MediaPlayer waterDropSound; // Water drop sound effect
     private ArrayList<Integer> colorList;
@@ -45,15 +51,17 @@ public class MainActivity extends AppCompatActivity {
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
 
+    private static final HashMap<String, String> statsList = new HashMap<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.activity = this;
+        this.mainActivity = this;
 
         this.rollDiceSound = MediaPlayer.create(this, R.raw.roll_dice);
         this.waterDropSound = MediaPlayer.create(this, R.raw.water_drop);
-        shuffleBox(); //displays the box randomly
+
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
@@ -67,6 +75,30 @@ public class MainActivity extends AppCompatActivity {
         for(int color : colorPalette) {
             colorList.add(color);
         }
+        //display box randomly, has to be run at the end of onCreate
+        shuffleBox();
+        updateBoxStats();
+    }
+
+    /**
+     * retrieves the statistics from the database
+     */
+    private void updateBoxStats() {
+        DB_STATS.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("rb", "Update box statistics");
+                statsList.clear();
+                for(DataSnapshot child: snapshot.getChildren()){
+                    statsList.put(child.getKey(), child.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("rb", "cancel update stats : " + error.getMessage());
+            }
+        });
     }
 
     /**
@@ -91,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         infoActivity.putExtra("boxName", box_name);
 
         //create box popup builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(this); //activity
+        AlertDialog.Builder builder = new AlertDialog.Builder(this); //main activity
 
         // set the custom layout
         final View popupView = getLayoutInflater().inflate(R.layout.popup,null);
@@ -126,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     startActivity(infoActivity);
-                    activity.finish();
+                    mainActivity.finish();
                 }
             });
         }
@@ -142,6 +174,28 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickLogo(View view){
         shuffleBox();
+    }
+
+    /**
+     * Creates the popup with statistics when the button stats is clicked on
+     * @param view : the view that called the method
+     */
+    public void onClickStats(View view) {
+        Log.d("rb", "Show stats in a ListView" + statsList.toString());
+        //create box stats popup builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        //set the custom layout
+        final View statsPopup = getLayoutInflater().inflate(R.layout.popup,null);
+        builder.setView(statsPopup);
+        TextView title = statsPopup.findViewById(R.id.txtPopContentTitle);
+        title.setText(R.string.stats);
+        //set stats ListView
+        ListView statsListView = statsPopup.findViewById(R.id.listViewStats);
+        statsListView.setAdapter(new BoxInfoItemAdapter(this, statsList));
+        statsListView.setVisibility(View.VISIBLE);
+        //display popup
+        AlertDialog popup = builder.create();
+        popup.show();
     }
 
     /**
@@ -202,5 +256,4 @@ public class MainActivity extends AppCompatActivity {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
     }
-
 }
