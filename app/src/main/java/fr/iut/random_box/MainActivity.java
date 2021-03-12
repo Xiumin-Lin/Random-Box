@@ -62,7 +62,6 @@ public class MainActivity extends AppCompatActivity {
         this.rollDiceSound = MediaPlayer.create(this, R.raw.roll_dice);
         this.waterDropSound = MediaPlayer.create(this, R.raw.water_drop);
 
-
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mAccel = 0.00f;
@@ -99,12 +98,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("rb", "cancel update stats : " + error.getMessage());
             }
         });
-
-        try
-        {
-            this.getSupportActionBar().hide();
-        }
-        catch (NullPointerException e){}
     }
 
     /**
@@ -193,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
         //set the custom layout
         final View statsPopup = getLayoutInflater().inflate(R.layout.popup,null);
         builder.setView(statsPopup);
-        TextView title = statsPopup.findViewById(R.id.txtPopContentTitle);
+        TextView title = statsPopup.findViewById(R.id.txtPopTitle);
         title.setText(R.string.stats);
         //set stats ListView
         ListView statsListView = statsPopup.findViewById(R.id.listViewStats);

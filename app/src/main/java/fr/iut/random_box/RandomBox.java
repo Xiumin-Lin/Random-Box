@@ -98,13 +98,11 @@ public abstract class RandomBox {
                 case "description":
                     String longText = json.getString(pair.getValue());
                     TextView longtextView = infoView.findViewById(R.id.txtInfoContentLong);
-                    setTextViewContent(longtextView, longText);
-                    break;
+                    setTextViewContent(longtextView, longText); break;
                 case "picture":
                     String imgUrl = json.getString(pair.getValue());
                     ImageView imgView = infoView.findViewById(R.id.imgInfoContent);
-                    setImgViewURL(imgView, imgUrl);
-                    break;
+                    setImgViewURL(imgView, imgUrl); break;
                 default:
                     Log.d("rb", pair.getKey() + " key doesn't exist in generalFields");
             }

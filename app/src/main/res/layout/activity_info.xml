@@ -110,14 +110,15 @@
 
         <Button
             android:id="@+id/btnInfoBack"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/white"
             android:onClick="onClickBack"
             android:text="@string/back"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 
 

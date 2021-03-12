@@ -148,10 +148,9 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             android:text="@string/stats"
+            android:textSize="20sp"
             android:textAllCaps="false"
-            android:backgroundTint="@color/white"
             android:onClick="onClickStats"
             style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
-
 </androidx.constraintlayout.widget.ConstraintLayout>
