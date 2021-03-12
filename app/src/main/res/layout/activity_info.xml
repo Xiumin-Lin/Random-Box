@@ -10,51 +10,100 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="80dp"
         android:contentDescription="@string/app_name"
+        android:onClick="onClickBack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
-    <LinearLayout
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="vertical"
         android:background="@color/white"
-        android:gravity="center_horizontal"
-        android:padding="10dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutNav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogo">
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo"
+        android:fillViewport="true">
 
-        <TextView
-            android:id="@+id/txtInfoTitle"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/info_title"
-            android:textAllCaps="true"
-            android:textColor="@color/jaguar"
-            android:textSize="30sp"
-            android:textStyle="bold"/>
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="15dp"
+            android:paddingVertical="10dp">
 
-        <TextView
-            android:id="@+id/txtInfoBoxName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Box Name"
-            android:textColor="@color/jaguar"
-            android:layout_marginTop="10dp"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/txtInfoTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/info_title"
+                android:textAllCaps="true"
+                android:textColor="@color/jaguar"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txtInfoContentTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_marginTop="15dp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center"
+                android:text="@string/content_title"
+                android:textAllCaps="true"
+                android:textColor="@color/salmon"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/txtInfoContentSubtitle"
+                style="@style/simpleText"
+                android:gravity="center"
+                android:maxWidth="300dp"
+                android:text="@string/content_subtitle"
+                android:visibility="gone" />
+
+            <ImageView
+                android:id="@+id/imgInfoContent"
+                android:layout_width="wrap_content"
+                android:layout_height="300dp"
+                android:layout_marginVertical="10dp"
+                android:adjustViewBounds="true"
+                android:contentDescription="@string/content_img"
+                android:scaleType="fitXY"
+                android:visibility="gone"/>
+
+            <ListView
+                android:id="@+id/listInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:dividerHeight="1sp"
+                android:divider="@color/jaguar"
+                android:layout_gravity="center"
+                android:visibility="gone" />
+
+            <TextView
+                android:id="@+id/txtInfoContentLong"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/border_simple"
+                android:textColor="@color/jaguar"
+                android:textSize="15sp"
+                android:padding="10dp"
+                android:visibility="gone"/>
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/linearLayoutNav"
         style="?android:attr/buttonBarStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:gravity="center"
+        android:orientation="vertical"
         android:padding="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,15 +111,16 @@
 
         <Button
             android:id="@+id/btnInfoBack"
-            style="?android:attr/buttonBarButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             android:backgroundTint="@color/white"
+            android:onClick="onClickBack"
             android:text="@string/back"
-            android:textAllCaps="false" />
+            android:textAllCaps="false"
+            android:textSize="20sp"
+            style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

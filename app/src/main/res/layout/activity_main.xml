@@ -2,165 +2,91 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/jaguar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/jaguar"
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imgLogo"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:contentDescription="@string/app_name"
-        android:onClick="shuffleBox"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayoutMain"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:id="@+id/titleMain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo"
-        tools:ignore="OnClick" />
+        android:contentDescription="@string/app_name"
+        app:layout_constraintVertical_bias="0.089"/>
 
-    <LinearLayout
-        android:id="@+id/linearLayoutMain"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/white"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayoutNav"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogo">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/introduction"
-            android:textAlignment="center"
-            android:textColor="@color/jaguar"
-            android:textSize="25sp"
-            android:textStyle="bold" />
-
-        <Space
-            android:layout_width="wrap_content"
-            android:layout_height="20dp" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/box_1"
-                android:layout_width="130dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:backgroundTint="@color/cerulean"
-                android:onClick="onClickBtnBox"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/box_2"
-                android:layout_width="130dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:backgroundTint="@color/salmon"
-                android:onClick="onClickBtnBox"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/box_3"
-                android:layout_width="130dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:backgroundTint="@color/melon"
-                android:onClick="onClickBtnBox"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/box_4"
-                android:layout_width="130dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:backgroundTint="@color/banana"
-                android:onClick="onClickBtnBox"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center">
-
-            <Button
-                android:id="@+id/box_5"
-                android:layout_width="130dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:backgroundTint="@color/lavender"
-                android:onClick="onClickBtnBox"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/white" />
-
-            <Button
-                android:id="@+id/box_6"
-                android:layout_width="130dp"
-                android:layout_height="100dp"
-                android:layout_margin="10dp"
-                android:backgroundTint="@color/perano"
-                android:onClick="onClickBtnBox"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/white" />
-        </LinearLayout>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayoutNav"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/btnNumber"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="100dp"
+        android:backgroundTint="@color/cerulean"
+        android:text="@string/number"
+        android:onClick="onClickBtnBox"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayoutMain"
-        style="?android:attr/buttonBarStyle">
-        <Button
-            android:id="@+id/btnStats"
-            android:text="@string/stats"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="10dp"
-            style="?android:attr/buttonBarButtonStyle"/>
-        <Button
-            android:id="@+id/btnConfig"
-            android:text="@string/config"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            style="?android:attr/buttonBarButtonStyle"/>
-    </LinearLayout>
+        app:layout_constraintTop_toBottomOf="@+id/titleMain" />
+
+    <Button
+        android:id="@+id/btnMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/banana"
+        android:text="@string/movie"
+        android:onClick="onClickBtnBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnNumber" />
+
+    <Button
+        android:id="@+id/btnColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/salmon"
+        android:text="@string/color"
+        android:onClick="onClickBtnBox"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnMovie" />
+
+    <TextView
+        android:id="@+id/textNum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/number"
+        app:layout_constraintBottom_toBottomOf="@+id/btnNumber"
+        app:layout_constraintStart_toEndOf="@+id/btnNumber"
+        app:layout_constraintTop_toTopOf="@+id/btnNumber"
+        app:layout_constraintVertical_bias="0.482" />
+
+    <TextView
+        android:id="@+id/textColor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/color"
+        app:layout_constraintBottom_toBottomOf="@+id/btnColor"
+        app:layout_constraintStart_toEndOf="@+id/btnColor"
+        app:layout_constraintTop_toTopOf="@+id/btnColor" />
+
+    <TextView
+        android:id="@+id/textMovie"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:text="@string/movie"
+        app:layout_constraintBottom_toBottomOf="@+id/btnMovie"
+        app:layout_constraintStart_toEndOf="@+id/btnMovie"
+        app:layout_constraintTop_toTopOf="@+id/btnMovie"
+        app:layout_constraintVertical_bias="0.413" />
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

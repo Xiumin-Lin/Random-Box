@@ -1,55 +1,103 @@
 package fr.iut.random_box;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
+import android.content.res.ColorStateList;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
-    private Button btnN;
-    private DatabaseReference db;
-    private MainActivity activity;
-    private static final int NUMBERBOX = 6;
-    ArrayList<String> listBox;
+    private static final int NB_MAX_BOX = 6;
+    private final DatabaseReference DB_STATS = FirebaseDatabase.getInstance().getReference("stats/box");
+    private final ArrayList<String> NAME_BOX_LIST = new ArrayList<>(Arrays.asList("number","color","meal","movie","anime","astronomy")); //TODO make Enum
+    private final ArrayList<String> STANDALONE_BOX_LIST = new ArrayList<>(Arrays.asList("number","color"));
+    private final ArrayList<Integer> BOX_ID_LIST = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
 
-    private SensorManager mSensorManager;
+    private MainActivity mainActivity;
+    private MediaPlayer rollDiceSound; // Dice sound effect
+    private MediaPlayer waterDropSound; // Water drop sound effect
+    private ArrayList<Integer> colorList;
+
+    private SensorManager mSensorManager; // object to access the device's sensors
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
+
+    private static final HashMap<String, String> statsList = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        this.db = FirebaseDatabase.getInstance().getReference();
-        this.activity = this;
-        shuffleBox(null);
+        this.mainActivity = this;
+
+        this.rollDiceSound = MediaPlayer.create(this, R.raw.roll_dice);
+        this.waterDropSound = MediaPlayer.create(this, R.raw.water_drop);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
+
+        // Collect the array in the colors.xml as an array of int and put it into a ArrayList to shuffle
+        int[] colorPalette = getResources().getIntArray(R.array.palette);
+        this.colorList = new ArrayList<>();
+        for(int color : colorPalette) {
+            colorList.add(color);
+        }
+        //display box randomly, has to be run at the end of onCreate
+        shuffleBox();
+        updateBoxStats();
+    }
+
+    /**
+     * retrieves the statistics from the database
+     */
+    private void updateBoxStats() {
+        DB_STATS.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                Log.d("rb", "Update box statistics");
+                statsList.clear();
+                for(DataSnapshot child: snapshot.getChildren()){
+                    statsList.put(child.getKey(), child.getValue().toString());
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("rb", "cancel update stats : " + error.getMessage());
+            }
+        });
     }
 
     /**
@@ -57,24 +105,24 @@ public class MainActivity extends AppCompatActivity {
      * @param view : the view that called the method
      */
     public void onClickBtnBox(View view){
-        String box_name = "";
-
-        switch (view.getId()){
-            case R.id.box_1: box_name += listBox.get(0); break;
-            case R.id.box_2: box_name += listBox.get(1); break;
-            case R.id.box_3: box_name += listBox.get(2); break;
-            case R.id.box_4: box_name += listBox.get(3); break;
-            default: Log.d("rb", "Unknown box id"); return;
+        Button btn = (Button) view;
+        waterDropSound.start();
+        String box_name = btn.getText().toString();
+        Log.d("rb", "Open " + box_name + " box");
+        if(!NAME_BOX_LIST.contains(box_name)){
+            Log.d("rb", "Unknown box name");
+            return;
         }
+
         //increment stat of the selected box
-        db.child("stats").child("box").child(box_name).setValue(ServerValue.increment(1));
+        DB_STATS.child(box_name).setValue(ServerValue.increment(1));
 
         //create & set intent
         Intent infoActivity = new Intent(getApplicationContext(), InfoActivity.class);
-        infoActivity.putExtra("box_name", box_name);
+        infoActivity.putExtra("boxName", box_name);
 
         //create box popup builder
-        AlertDialog.Builder builder = new AlertDialog.Builder(this); //activity
+        AlertDialog.Builder builder = new AlertDialog.Builder(this); //main activity
 
         // set the custom layout
         final View popupView = getLayoutInflater().inflate(R.layout.popup,null);
@@ -83,52 +131,33 @@ public class MainActivity extends AppCompatActivity {
         //update custom layout components
         TextView title = popupView.findViewById(R.id.txtPopTitle);
         title.setText(box_name);
-        switch (box_name){
-            case "number":
-                TextView txtRandNumber = popupView.findViewById(R.id.txtPopBigNumber);
-                String randNum = "" + RandomBox.getRandomNumber();
-                txtRandNumber.setText(randNum);
-                txtRandNumber.setVisibility(View.VISIBLE); break;
-            case "color":
-                ImageView imgRandColor = popupView.findViewById(R.id.imgPopContent);
-                //convert px to dp
-                int _200dpInpx = (int) (200 * popupView.getResources().getDisplayMetrics().density);
-                Log.d("rb", "200 dp = " + _200dpInpx + " px");
-                imgRandColor.getLayoutParams().height = _200dpInpx; //height receive px
-                imgRandColor.getLayoutParams().width = _200dpInpx;
-                imgRandColor.setVisibility(View.VISIBLE);
 
-                int randColor = RandomBox.getRandomColor();
-                imgRandColor.setBackgroundColor(randColor);
-                TextView txtCTitle = popupView.findViewById(R.id.txtPopContentTitle);
-                txtCTitle.setText("HEX = " + String.format("#%06X", (0xFFFFFF & randColor))); //convert int color to hex format
-                txtCTitle.setVisibility(View.VISIBLE); break;
-            case "meal":
-                ImageView imgContent = popupView.findViewById(R.id.imgPopContent);
-                String url = "https://cdn.myanimelist.net/images/anime/13/50521.jpg";
-                LoadImage loadImage = new LoadImage(imgContent);
-                loadImage.execute(url);
-                imgContent.setVisibility(View.VISIBLE);
-
-                TextView imgTitle = popupView.findViewById(R.id.txtPopTitle);
-                imgTitle.setText("Hyouka");
-                imgTitle.setVisibility(View.VISIBLE);
-
-                TextView subTitle = popupView.findViewById(R.id.txtPopSubTitle);
-                subTitle.setText("氷菓");
-                subTitle.setVisibility(View.VISIBLE);
-
-                View scrollView = popupView.findViewById(R.id.scrollPopDetail);
-                scrollView.setVisibility(View.VISIBLE);
-            case "movie": break;
-            default: return;
+        RandomBox randomBox = RandomBoxFactory.buildBox(box_name);
+        if(randomBox == null){
+            Log.d("rb", "RandomBox IS NULL");
+            return;
         }
-        if(view.getId() == R.id.box_3 || view.getId() == R.id.box_4){
+
+        if(!randomBox.needAPI()){
+            randomBox.setPopupView(popupView);
+        }
+        else {
+            // Instantiate the RequestQueue.
+            RequestQueue queue = Volley.newRequestQueue(this);
+            // Add the request to the RequestQueue.
+            if(randomBox.hasJsonObject()){
+                queue.add(randomBox.makeJsonObjectRequest(popupView, infoActivity));
+            } else {
+                queue.add(randomBox.makeJsonArrayRequest(popupView, infoActivity));
+            }
+        }
+
+        if(!STANDALONE_BOX_LIST.contains(box_name)){
             builder.setNeutralButton("Get More Info", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     startActivity(infoActivity);
-                    activity.finish();
+                    mainActivity.finish();
                 }
             });
         }
@@ -139,34 +168,58 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * Shuffles the boxes position
+     * Shuffles the boxes position by clicking on the logo.
      * @param view : the view that called the method
      */
-    public void shuffleBox(View v){
+    public void onClickLogo(View view){
+        shuffleBox();
+    }
 
-        Log.d("rb", "run shuffleBox");
-        listBox = new ArrayList<String>();
-        listBox.add("number");
-        listBox.add("meal");
-        listBox.add("color");
-        listBox.add("movie");
+    /**
+     * Creates the popup with statistics when the button stats is clicked on
+     * @param view : the view that called the method
+     */
+    public void onClickStats(View view) {
+        Log.d("rb", "Show stats in a ListView" + statsList.toString());
+        //create box stats popup builder
+        AlertDialog.Builder builder = new AlertDialog.Builder(mainActivity);
+        //set the custom layout
+        final View statsPopup = getLayoutInflater().inflate(R.layout.popup,null);
+        builder.setView(statsPopup);
+        TextView title = statsPopup.findViewById(R.id.txtPopTitle);
+        title.setText(R.string.stats);
+        //set stats ListView
+        ListView statsListView = statsPopup.findViewById(R.id.listViewStats);
+        statsListView.setAdapter(new BoxInfoItemAdapter(this, statsList));
+        statsListView.setVisibility(View.VISIBLE);
+        //display popup
+        AlertDialog popup = builder.create();
+        popup.show();
+    }
 
-        Collections.shuffle(listBox);
+    /**
+     * Shuffles the boxes position
+     */
+    public void shuffleBox(){
+        //Makes a rolling dice sound
+        Log.d("rb", "Rolling Dice");
+        rollDiceSound.start();
 
-        this.btnN = findViewById(R.id.box_1);
-        this.btnN.setText(listBox.get(0));
-        this.btnN = findViewById(R.id.box_2);
-        this.btnN.setText(listBox.get(1));
-        this.btnN = findViewById(R.id.box_3);
-        this.btnN.setText(listBox.get(2));
-        this.btnN = findViewById(R.id.box_4);
-        this.btnN.setText(listBox.get(3));
+        Log.d("rb", "Shuffle All Box");
+        Collections.shuffle(NAME_BOX_LIST);
+        Collections.shuffle(colorList);
+
+        Button btnBox;
+        for(int i = 0; i < NB_MAX_BOX; i++){
+            btnBox = findViewById(BOX_ID_LIST.get(i));
+            btnBox.setText(NAME_BOX_LIST.get(i));
+            btnBox.setBackgroundTintList(ColorStateList.valueOf(colorList.get(i)));
+        }
     }
 
     private final SensorEventListener mSensorListener = new SensorEventListener() {
-
         /**
-         * Detects the shake motion and call the shufflebox function
+         * Detects the shake motion and call shuffleBox()
          * @param se : the SensorEvent passed in parameter
          */
         public void onSensorChanged(SensorEvent se) {
@@ -174,13 +227,13 @@ public class MainActivity extends AppCompatActivity {
             float y = se.values[1];
             float z = se.values[2];
             mAccelLast = mAccelCurrent;
-            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            mAccelCurrent = (float) Math.sqrt(x*x + y*y + z*z);
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 
-            if (mAccel > 12) {
-                Log.d("rb", "device shaken");
-                shuffleBox(null);
+            if (mAccel > 20) {
+                Log.d("rb", "Device shaken");
+                shuffleBox();
             }
         }
 
@@ -202,5 +255,4 @@ public class MainActivity extends AppCompatActivity {
         mSensorManager.unregisterListener(mSensorListener);
         super.onPause();
     }
-
 }
