@@ -5,7 +5,6 @@ import android.view.View;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import fr.iut.random_box.InfoActivity;
 import fr.iut.random_box.R;
 import fr.iut.random_box.RandomBox;
 

@@ -27,27 +27,23 @@ import com.google.firebase.database.ServerValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int NB_MAX_BOX = 6;
     private final DatabaseReference DB_STATS = FirebaseDatabase.getInstance().getReference("stats/box");
-    private final ArrayList<String> NAME_BOX_LIST = new ArrayList<>(Arrays.asList("number","color","meal","movie","anime","astronomy"));
+    private final ArrayList<String> NAME_BOX_LIST = new ArrayList<>(Arrays.asList("number","color","meal","movie","anime","astronomy")); //TODO make Enum
     private final ArrayList<String> STANDALONE_BOX_LIST = new ArrayList<>(Arrays.asList("number","color"));
     private final ArrayList<Integer> BOX_ID_LIST = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
 
     private MainActivity activity;
-    private static final int NUMBERBOX = 6;
-    ArrayList<String> listBox;
     private MediaPlayer rollDiceSound; // Dice sound effect
     private MediaPlayer waterDropSound; // Water drop sound effect
+    private ArrayList<Integer> colorList;
 
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
-
-    private MediaPlayer mpRollDice; //TODO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,16 +51,22 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.activity = this;
 
-        this.mpRollDice = MediaPlayer.create(this, R.raw.roll_dice);
+        this.rollDiceSound = MediaPlayer.create(this, R.raw.roll_dice);
+        this.waterDropSound = MediaPlayer.create(this, R.raw.water_drop);
         shuffleBox(); //displays the box randomly
-        rollDiceSound = MediaPlayer.create(this, R.raw.roll_dice);
-        waterDropSound = MediaPlayer.create(this, R.raw.water_drop);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
+
+        // Collect the array in the colors.xml as an array of int and put it into a ArrayList to shuffle
+        int[] colorPalette = getResources().getIntArray(R.array.palette);
+        this.colorList = new ArrayList<>();
+        for(int color : colorPalette) {
+            colorList.add(color);
+        }
     }
 
     /**
@@ -148,18 +150,10 @@ public class MainActivity extends AppCompatActivity {
     public void shuffleBox(){
         //Makes a rolling dice sound
         Log.d("rb", "Rolling Dice");
-        mpRollDice.start();
+        rollDiceSound.start();
 
-        //
         Log.d("rb", "Shuffle All Box");
         Collections.shuffle(NAME_BOX_LIST);
-
-        // Collect the array in the colors.xml as an array of int and put it into a List to shuffle
-        int[] colorPalette = getResources().getIntArray(R.array.palette);
-        List<Integer> colorList = new ArrayList<Integer>(colorPalette.length);
-        for(int i : colorPalette) {
-            colorList.add(i);
-        }
         Collections.shuffle(colorList);
 
         Button btnBox;

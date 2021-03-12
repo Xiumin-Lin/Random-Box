@@ -10,8 +10,6 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.Map;
 
-import fr.iut.random_box.R;
-
 public class BoxInfoItemAdapter extends BaseAdapter {
     private final ArrayList<Map.Entry<String,String>> infos;
     private final LayoutInflater inflater;
