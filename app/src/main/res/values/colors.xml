@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="amethyst">#9b59b6</color>
+    <color name="asphalt">#34495e</color>
+    <color name="banana">#e1b12c</color>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="carrot">#e67e22</color>
+    <color name="cerulean">#005288</color>
+    <color name="cinnabar">#E74C3C</color>
+    <color name="emerald">#16a085</color>
+    <color name="fuchsia">#B33771</color>
     <color name="jaguar">#282733</color>
     <color name="lavender">#CACCEF</color>
-    <color name="cerulean">#005288</color>
     <color name="melon">#FFB8B8</color>
-    <color name="banana">#FFEAA7</color>
-    <color name="salmon">#FF7675</color>
-    <color name="cinnabar">#E74C3C</color>
     <color name="perano">#A29BFE</color>
     <color name="purple_200">#CE93D8</color>
     <color name="purple_500">#9C27B0</color>
     <color name="purple_700">#7B1FA2</color>
+    <color name="salmon">#FF7675</color>
     <color name="teal_200">#80CBC4</color>
     <color name="teal_700">#00796B</color>
+    <color name="white">#FFFFFFFF</color>
 
+    <array name="palette">
+        <item>@color/amethyst</item>
+        <item>@color/asphalt</item>
+        <item>@color/banana</item>
+        <item>@color/carrot</item>
+        <item>@color/cerulean</item>
+        <item>@color/cinnabar</item>
+        <item>@color/emerald</item>
+        <item>@color/fuchsia</item>
+        <item>@color/lavender</item>
+        <item>@color/melon</item>
+        <item>@color/perano</item>
+        <item>@color/salmon</item>
+    </array>
 </resources>

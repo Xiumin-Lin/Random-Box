@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,6 +27,7 @@ import com.google.firebase.database.ServerValue;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private static final int NB_MAX_BOX = 6;
@@ -35,12 +37,17 @@ public class MainActivity extends AppCompatActivity {
     private final ArrayList<Integer> BOX_ID_LIST = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
 
     private MainActivity activity;
+    private static final int NUMBERBOX = 6;
+    ArrayList<String> listBox;
+    private MediaPlayer rollDiceSound; // Dice sound effect
+    private MediaPlayer waterDropSound; // Water drop sound effect
+
     private SensorManager mSensorManager;
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
 
-    private MediaPlayer mpRollDice;
+    private MediaPlayer mpRollDice; //TODO
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         this.mpRollDice = MediaPlayer.create(this, R.raw.roll_dice);
         shuffleBox(); //displays the box randomly
+        rollDiceSound = MediaPlayer.create(this, R.raw.roll_dice);
+        waterDropSound = MediaPlayer.create(this, R.raw.water_drop);
 
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mSensorManager.registerListener(mSensorListener, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_NORMAL);
@@ -64,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
      */
     public void onClickBtnBox(View view){
         Button btn = (Button) view;
+        waterDropSound.start();
         String box_name = btn.getText().toString();
         Log.d("rb", "Open " + box_name + " box");
         if(!NAME_BOX_LIST.contains(box_name)){
@@ -144,10 +154,19 @@ public class MainActivity extends AppCompatActivity {
         Log.d("rb", "Shuffle All Box");
         Collections.shuffle(NAME_BOX_LIST);
 
+        // Collect the array in the colors.xml as an array of int and put it into a List to shuffle
+        int[] colorPalette = getResources().getIntArray(R.array.palette);
+        List<Integer> colorList = new ArrayList<Integer>(colorPalette.length);
+        for(int i : colorPalette) {
+            colorList.add(i);
+        }
+        Collections.shuffle(colorList);
+
         Button btnBox;
         for(int i = 0; i < NB_MAX_BOX; i++){
             btnBox = findViewById(BOX_ID_LIST.get(i));
             btnBox.setText(NAME_BOX_LIST.get(i));
+            btnBox.setBackgroundTintList(ColorStateList.valueOf(colorList.get(i)));
         }
     }
 
