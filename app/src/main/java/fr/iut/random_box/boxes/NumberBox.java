@@ -13,13 +13,22 @@ public class NumberBox extends RandomBox {
     }
 
     /**
-     * @return a random number between 0 & 100
+     * @return a random number between 0 & 99
      */
-    public static int getRandomNumber(){ return (new Random()).nextInt(101); }
+    public static int getRandomNumber(){ return (new Random()).nextInt(100); }
+
+    /**
+     * @param min min
+     * @param max value
+     * @return a random number between the indicate interval
+     */
+    public static int getRandomNumber(int min, int max){
+        return min + (new Random()).nextInt(max-min);
+    }
 
     @Override
     public void setPopupView(View popupView) {
         super.setPopupView(popupView);
-        setTextViewContent(popupView.findViewById(R.id.txtPopBigNumber), "" + getRandomNumber());
+        setTextViewContent(popupView.findViewById(R.id.txtPopBigNumber), "" + getRandomNumber(0,100));
     }
 }

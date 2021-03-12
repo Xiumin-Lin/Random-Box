@@ -115,6 +115,7 @@ public abstract class RandomBox {
             itemList.put(pair.getKey(),json.getString(pair.getValue()));
         }
         if(!itemList.isEmpty()){
+            Log.d("rb", "itemList " + itemList.toString());
             infoItems.setAdapter(new BoxInfoItemAdapter(infoView, itemList));
             infoItems.setVisibility(View.VISIBLE);
         }

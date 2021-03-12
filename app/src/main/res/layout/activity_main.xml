@@ -128,7 +128,6 @@
                 android:textAllCaps="true"
                 android:textColor="@color/white" />
         </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout

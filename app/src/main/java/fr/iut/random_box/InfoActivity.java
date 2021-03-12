@@ -49,11 +49,12 @@ public class InfoActivity extends AppCompatActivity {
                     HashMap<String,String> additionalFields = new HashMap<>(); //optional info of a box
                     for(DataSnapshot child: snapshot.getChildren()){
                         if(Objects.equals(child.getKey(), "info")){
+                            //Get all meta data about additionalFields of the box from database
                             for(DataSnapshot infoChild : child.getChildren()){
                                 additionalFields.put(infoChild.getKey(), infoChild.getValue().toString());
                             }
                         }
-                        else
+                        else //Get all meta data about generalFields of the box from database
                             generalFields.put(child.getKey(), child.getValue().toString());
                     }
                     if(!generalFields.isEmpty() && randomBox != null) {

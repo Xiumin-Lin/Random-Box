@@ -1,6 +1,7 @@
 package fr.iut.random_box;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,7 +27,7 @@ public class BoxInfoItemAdapter extends BaseAdapter {
 
     @Override
     public Map.Entry<String,String> getItem(int position) {
-        return (Map.Entry<String,String>) infos.get(position);
+        return infos.get(position);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class BoxInfoItemAdapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.item_adapter, null);
 
         Map.Entry<String, String> item = getItem(position);
+        Log.d("rb", position + " Key = " + item.getKey() + " & Value = " + item.getValue());
         ((TextView) convertView.findViewById(R.id.txtItemKey)).setText(item.getKey());
         ((TextView) convertView.findViewById(R.id.txtItemValue)).setText(item.getValue());
 

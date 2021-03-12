@@ -18,12 +18,13 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo" />
 
-    <ScrollView
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
         app:layout_constraintBottom_toTopOf="@+id/linearLayoutNav"
-        app:layout_constraintTop_toBottomOf="@+id/imgLogo">
+        app:layout_constraintTop_toBottomOf="@+id/imgLogo"
+        android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,7 +68,7 @@
             <ImageView
                 android:id="@+id/imgInfoContent"
                 android:layout_width="wrap_content"
-                android:layout_height="180dp"
+                android:layout_height="300dp"
                 android:layout_marginVertical="10dp"
                 android:adjustViewBounds="true"
                 android:contentDescription="@string/content_img"
@@ -77,11 +78,11 @@
             <ListView
                 android:id="@+id/listInfo"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="50dp"
+                android:dividerHeight="1sp"
+                android:divider="@color/jaguar"
                 android:layout_gravity="center"
-                android:nestedScrollingEnabled="false"
-                android:visibility="gone"
-                tools:ignore="NestedScrolling" />
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/txtInfoContentLong"
@@ -94,7 +95,7 @@
                 android:padding="10dp"
                 android:visibility="gone"/>
         </LinearLayout>
-    </ScrollView>
+    </androidx.core.widget.NestedScrollView>
 
     <LinearLayout
         android:id="@+id/linearLayoutNav"

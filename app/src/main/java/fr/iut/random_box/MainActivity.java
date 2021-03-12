@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             float y = se.values[1];
             float z = se.values[2];
             mAccelLast = mAccelCurrent;
-            mAccelCurrent = (float) Math.sqrt((double) (x*x + y*y + z*z));
+            mAccelCurrent = (float) Math.sqrt(x*x + y*y + z*z);
             float delta = mAccelCurrent - mAccelLast;
             mAccel = mAccel * 0.9f + delta; // perform low-cut filter
 

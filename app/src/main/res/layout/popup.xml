@@ -100,7 +100,6 @@
             android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:padding="10dp"
-            android:text="@string/content_longText"
             android:textSize="12sp"
             android:textColor="@color/jaguar"/>
     </ScrollView>
@@ -111,6 +110,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="10dp"
+        android:dividerHeight="1sp"
+        android:divider="@color/jaguar"
         android:padding="10dp"
         android:background="@drawable/border_simple"
         android:visibility="gone"/>
