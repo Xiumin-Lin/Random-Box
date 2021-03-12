@@ -11,12 +11,12 @@ public class RandomBoxFactory {
      * @return the RandomBox class requested, or null if the box name was found
      */
     public static RandomBox buildBox(String box_name) {
-        switch (box_name){
+        switch (box_name){ //TODO better use Enum
             case "number": return new NumberBox();
             case "color": return new ColorBox();
-            case "movie": return new MovieBox();
             case "meal": return new MealBox();
-            case "anime": return new AnimeBox();
+            case "anime": return new AnimeBox(BoxType.ANIME,"https://api.jikan.moe/v3/genre/anime");
+            case "manga": return new AnimeBox(BoxType.MANGA,"https://api.jikan.moe/v3/genre/manga");
             case "astronomy": return new AstronomyBox();
             default:
                 Log.d("rb", "Unknown box, can't build " + box_name + " box");

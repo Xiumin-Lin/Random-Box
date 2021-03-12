@@ -44,7 +44,7 @@ public class InfoActivity extends AppCompatActivity {
         dbBox.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if(snapshot.exists()){ //TODO can be improved
+                if(snapshot.exists()){ //TODO can be reduced & improved
                     HashMap<String,String> generalFields = new HashMap<>(); //generic fields of a box
                     HashMap<String,String> additionalFields = new HashMap<>(); //optional info of a box
                     for(DataSnapshot child: snapshot.getChildren()){

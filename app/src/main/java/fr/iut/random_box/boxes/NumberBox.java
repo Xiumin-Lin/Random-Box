@@ -18,8 +18,16 @@ public class NumberBox extends RandomBox {
     public static int getRandomNumber(){ return (new Random()).nextInt(100); }
 
     /**
-     * @param min min
-     * @param max value
+     * @param max value (exclusive)
+     * @return a random number between 0 & max exclude
+     */
+    public static int getRandomNumber(int max){
+        return (new Random()).nextInt(max);
+    }
+
+    /**
+     * @param min value (inclusive)
+     * @param max value (exclusive)
      * @return a random number between the indicate interval
      */
     public static int getRandomNumber(int min, int max){
@@ -29,6 +37,6 @@ public class NumberBox extends RandomBox {
     @Override
     public void setPopupView(View popupView) {
         super.setPopupView(popupView);
-        setTextViewContent(popupView.findViewById(R.id.txtPopBigNumber), "" + getRandomNumber(0,100));
+        setTextViewContent(popupView.findViewById(R.id.txtPopBigNumber), "" + getRandomNumber());
     }
 }

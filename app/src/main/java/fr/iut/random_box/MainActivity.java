@@ -37,7 +37,7 @@ import java.util.HashMap;
 public class MainActivity extends AppCompatActivity {
     private static final int NB_MAX_BOX = 6;
     private final DatabaseReference DB_STATS = FirebaseDatabase.getInstance().getReference("stats/box");
-    private final ArrayList<String> NAME_BOX_LIST = new ArrayList<>(Arrays.asList("number","color","meal","movie","anime","astronomy")); //TODO make Enum
+    private final ArrayList<String> NAME_BOX_LIST = new ArrayList<>(Arrays.asList("number","color","meal","anime","manga","astronomy")); //TODO make Enum
     private final ArrayList<String> STANDALONE_BOX_LIST = new ArrayList<>(Arrays.asList("number","color"));
     private final ArrayList<Integer> BOX_ID_LIST = new ArrayList<>(Arrays.asList(R.id.box_1,R.id.box_2,R.id.box_3,R.id.box_4,R.id.box_5,R.id.box_6));
 

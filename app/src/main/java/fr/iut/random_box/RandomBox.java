@@ -176,5 +176,4 @@ public abstract class RandomBox {
         Picasso.get().load(url).error(R.drawable.btn_blackheart).into(textViewById);
         textViewById.setVisibility(View.VISIBLE);
     }
-
 }

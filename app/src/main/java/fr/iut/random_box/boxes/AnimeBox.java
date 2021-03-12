@@ -22,8 +22,15 @@ public class AnimeBox extends RandomBox {
     //Ban list of nsfw genre id
     private static final ArrayList<Integer> BAN_GENRE_ID = new ArrayList<>(Arrays.asList(12,33,34));
     private static final int NB_GENRE = 43;
-    public AnimeBox() {
-        super("anime","https://api.jikan.moe/v3/genre/anime",true);
+    public enum a{A, V}
+
+    /**
+     * Create a AnimeBox ou a MangaBox depending of the given BoxType
+     * @param name has BoxType.ANIME or BoxType.MANGA
+     * @param apiUrl apiUrl the api url where we can get information
+     */
+    public AnimeBox(BoxType name, String apiUrl) {
+        super(name.toString().toLowerCase(),apiUrl,true);
     }
 
     @Override
@@ -40,12 +47,15 @@ public class AnimeBox extends RandomBox {
      */
     private int getRandomGenreId(){
         int randAnimeGenreId;
-        do{
+        do{ //get a genre id that is not ban
             randAnimeGenreId = NumberBox.getRandomNumber(1, NB_GENRE);
         } while (BAN_GENRE_ID.contains(randAnimeGenreId));
         return randAnimeGenreId;
     }
 
+    /**
+     * @return the anime/manga api url with a random genre id
+     */
     @Override
     public String getApiUrl() {
         return super.getApiUrl() + "/" + getRandomGenreId();
@@ -57,12 +67,13 @@ public class AnimeBox extends RandomBox {
             @Override
             public void onResponse(JSONObject response) {
                 try {
-                    //response should return a JSON containing many anime data
+                    //response return a JSONObject containing a big JSONArray of anime/manga data
+                    //then we randomly choose a anime/manga from this JSONArray
                     int randIdx = NumberBox.getRandomNumber();
-                    JSONObject randaAnimeData = response.getJSONArray("anime").getJSONObject(randIdx);
-                    infoActivity.putExtra("jsonResponse", randaAnimeData.toString());
-                    Log.d("rb", name + " JSON = " + randaAnimeData.toString());
-                    setPopupView(popupView, randaAnimeData);
+                    JSONObject randomAnimeManga = response.getJSONArray(name).getJSONObject(randIdx);
+                    infoActivity.putExtra("jsonResponse", randomAnimeManga.toString());
+                    Log.d("rb", name + " JSON = " + randomAnimeManga.toString());
+                    setPopupView(popupView, randomAnimeManga);
                 } catch (JSONException e) {
                     Log.e("rb", name + " JSONObject Error : " +  e.getMessage());
                 }
