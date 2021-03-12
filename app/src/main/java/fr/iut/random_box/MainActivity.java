@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer rollDiceSound; // Dice sound effect
     private MediaPlayer waterDropSound; // Water drop sound effect
 
-    private SensorManager mSensorManager;
+    private SensorManager mSensorManager; // object to access the device's sensors
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
@@ -56,6 +56,12 @@ public class MainActivity extends AppCompatActivity {
         mAccel = 0.00f;
         mAccelCurrent = SensorManager.GRAVITY_EARTH;
         mAccelLast = SensorManager.GRAVITY_EARTH;
+
+        try
+        {
+            this.getSupportActionBar().hide();
+        }
+        catch (NullPointerException e){}
     }
 
     /**
