@@ -2,9 +2,9 @@ package fr.iut.random_box.boxes;
 
 import android.view.View;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.iut.random_box.InfoActivity;
 import fr.iut.random_box.R;
 import fr.iut.random_box.RandomBox;
 
@@ -29,9 +29,4 @@ public class MovieBox extends RandomBox {
 //        setImgViewURL(popupView.findViewById(R.id.imgPopContent), getApiUrl());
 //        setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), "Guardians of the Galaxy Vol. 2");
 //    }
-
-    @Override
-    public void setInfoView(View infoView, JSONObject json) {
-        super.setInfoView(infoView, json);
-    }
 }

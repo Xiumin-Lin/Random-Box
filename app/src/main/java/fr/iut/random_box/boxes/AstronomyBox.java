@@ -5,6 +5,7 @@ import android.view.View;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.iut.random_box.InfoActivity;
 import fr.iut.random_box.R;
 import fr.iut.random_box.RandomBox;
 
@@ -26,10 +27,5 @@ public class AstronomyBox extends RandomBox {
         setImgViewURL(popupView.findViewById(R.id.imgPopContent), imgUrl);
         setTextViewContent(popupView.findViewById(R.id.txtPopContentTitle), title);
         setTextViewContent(popupView.findViewById(R.id.txtPopContentInfo1), date);
-    }
-
-    @Override
-    public void setInfoView(View infoView, JSONObject json) {
-        super.setInfoView(infoView, json);
     }
 }

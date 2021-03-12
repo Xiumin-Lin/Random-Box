@@ -1,61 +1,79 @@
 package fr.iut.random_box;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
-import java.util.Map;
+import java.util.Objects;
 
 public class InfoActivity extends AppCompatActivity {
+    private InfoActivity activity;
+    private RandomBox randomBox;
+    private Intent intent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_info);
-
+        this.activity = this;
         //set data send by MainActivity
-        Intent intent = getIntent();
-        try {
-            JSONObject jsonBox = new JSONObject(intent.getStringExtra("jsonResponse"));
-            String titleMeal = jsonBox.getString("strMeal");
-            String longMeal = "Instructions :\n" + jsonBox.getString("strInstructions");
-            String imgUrl = jsonBox.getString("strMealThumb");
+        this.intent = getIntent();
+        String boxName = intent.getStringExtra("boxName");
+        this.randomBox = RandomBoxFactory.buildBox(boxName);
 
-            //list of items
-            Map<String, String> itemMap = new HashMap<>();
-            itemMap.put("Area", jsonBox.getString("strArea"));
-            itemMap.put("Category", jsonBox.getString("strCategory"));
-            //get list view
-            ListView infoItems = findViewById(R.id.listInfo);
-            infoItems.setAdapter(new BoxInfoItemAdapter(this, itemMap));
-
-            if(!TextUtils.isEmpty(imgUrl)){
-                ImageView ivMeal = findViewById(R.id.imgInfoContent);
-                Picasso.get().load(imgUrl).error(R.drawable.btn_blackheart).into(ivMeal);
-            }
-            TextView title = findViewById(R.id.txtInfoContentTitle);
-            title.setText(titleMeal);
-//            TextView categ = findViewById(R.id.txtInfoContentSubtitle);
-//            categ.setText(categMeal);
-            TextView longtext = findViewById(R.id.txtInfoContentScroll);
-            longtext.setText(longMeal);
-
-        } catch (JSONException e) {
-            Log.d("rb", "Error while getting json data : " + e.getMessage());
+        DatabaseReference dbBox = FirebaseDatabase.getInstance().getReference("box/"+boxName);
+        if(randomBox == null){
+            Log.d("rb", "RandomBox is NULL");
+            finish();
         }
+
+        dbBox.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){ //TODO can be improved
+                    HashMap<String,String> generalFields = new HashMap<>(); //generic fields of a box
+                    HashMap<String,String> additionalFields = new HashMap<>(); //optional info of a box
+                    for(DataSnapshot child: snapshot.getChildren()){
+                        if(Objects.equals(child.getKey(), "info")){
+                            for(DataSnapshot infoChild : child.getChildren()){
+                                additionalFields.put(infoChild.getKey(), infoChild.getValue().toString());
+                            }
+                        }
+                        else
+                            generalFields.put(child.getKey(), child.getValue().toString());
+                    }
+                    if(!generalFields.isEmpty() && randomBox != null) {
+                        try {
+                            JSONObject jsonBox = new JSONObject(intent.getStringExtra("jsonResponse"));
+                            Log.d("rb", "JSON Response retrieve OK");
+                            Log.d("rb", "generalFields = " + generalFields.toString());
+                            Log.d("rb", "additionalFields = " + additionalFields.toString());
+                            randomBox.setInfoView(activity,jsonBox,generalFields,additionalFields);
+                        } catch (JSONException e) {
+                            Log.d("rb", "Error while getting/using json data in InfoActivity : " + e.getMessage());
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.d("rb", "Cancelled");
+            }
+        });
     }
 
     public void onClickBack(View view){

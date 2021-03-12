@@ -2,9 +2,9 @@ package fr.iut.random_box.boxes;
 
 import android.view.View;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import fr.iut.random_box.InfoActivity;
 import fr.iut.random_box.R;
 import fr.iut.random_box.RandomBox;
 
@@ -39,9 +39,4 @@ public class AnimeBox extends RandomBox {
 //        View scrollView = popupView.findViewById(R.id.scrollPopDetail);
 //        scrollView.setVisibility(View.VISIBLE);
 //    }
-
-    @Override
-    public void setInfoView(View infoView, JSONObject json) {
-        super.setInfoView(infoView, json);
-    }
 }

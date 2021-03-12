@@ -1,17 +1,27 @@
 package fr.iut.random_box.boxes;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import fr.iut.random_box.BoxInfoItemAdapter;
+import fr.iut.random_box.InfoActivity;
 import fr.iut.random_box.R;
 import fr.iut.random_box.RandomBox;
 
@@ -32,11 +42,6 @@ public class MealBox extends RandomBox {
         setTextViewContent(popupView.findViewById(R.id.txtPopTitle), title);
         setTextViewContent(popupView.findViewById(R.id.txtPopSubTitle), category);
         setTextViewContent(popupView.findViewById(R.id.txtPopContentInfo1), area);
-    }
-
-    @Override
-    public void setInfoView(View infoView, JSONObject json) {
-        super.setInfoView(infoView, json);
     }
 
     @Override

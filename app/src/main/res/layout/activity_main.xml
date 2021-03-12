@@ -151,15 +151,6 @@
             android:layout_height="match_parent"
             android:layout_marginEnd="10dp"
             style="?android:attr/buttonBarButtonStyle"/>
-        <Button
-            android:id="@+id/btnConfig"
-            android:text="@string/config"
-            android:textAllCaps="false"
-            android:backgroundTint="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginStart="10dp"
-            style="?android:attr/buttonBarButtonStyle"/>
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
