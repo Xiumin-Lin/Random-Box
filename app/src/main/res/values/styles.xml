@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="simpleText">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">25sp</item>
+        <item name="autoSizeTextType">uniform</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/jaguar</item>
+    </style>
+</resources>

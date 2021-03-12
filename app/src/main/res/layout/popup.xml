@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/popupLayout"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:maxWidth="300dp"
+    android:layout_margin="10dp"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:padding="20dp"
+    android:background="@color/banana">
+
+    <TextView
+        android:id="@+id/txtPopTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxHeight="40dp"
+        android:text="@string/popup_title"
+        android:textAllCaps="true"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:autoSizeTextType="uniform"
+        android:textColor="@color/jaguar"/>
+
+    <TextView
+        android:id="@+id/txtPopBigNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="100sp"
+        android:maxWidth="300dp"
+        android:text="@string/example_number"
+        android:textSize="100sp"
+        android:textStyle="bold"
+        android:textColor="@color/jaguar"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtPopContentTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="35sp"
+        android:layout_marginTop="10dp"
+        android:autoSizeTextType="uniform"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_title"
+        android:textColor="@color/jaguar"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtPopSubTitle"
+        style="@style/simpleText"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_subtitle"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imgPopContent"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:layout_marginTop="10dp"
+        android:contentDescription="@string/content_img"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/txtPopContentInfo1"
+        style="@style/simpleText"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_txt"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/txtPopContentInfo2"
+        style="@style/simpleText"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:maxWidth="300dp"
+        android:text="@string/content_txt"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/scrollPopDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/border_simple"
+        android:visibility="gone">
+        <TextView
+            android:id="@+id/txtPopDetail"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:textSize="12sp"
+            android:textColor="@color/jaguar"/>
+    </ScrollView>
+
+    <ListView
+        android:id="@+id/listViewStats"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="10dp"
+        android:dividerHeight="1sp"
+        android:divider="@color/jaguar"
+        android:padding="10dp"
+        android:background="@drawable/border_simple"
+        android:visibility="gone"/>
+
+</LinearLayout>
