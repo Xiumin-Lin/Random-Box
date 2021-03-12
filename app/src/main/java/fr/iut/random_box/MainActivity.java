@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private MediaPlayer waterDropSound; // Water drop sound effect
     private ArrayList<Integer> colorList;
 
-    private SensorManager mSensorManager;
+    private SensorManager mSensorManager; // object to access the device's sensors
     private float mAccel; // acceleration apart from gravity
     private float mAccelCurrent; // current acceleration including gravity
     private float mAccelLast; // last acceleration including gravity
@@ -99,6 +99,12 @@ public class MainActivity extends AppCompatActivity {
                 Log.d("rb", "cancel update stats : " + error.getMessage());
             }
         });
+
+        try
+        {
+            this.getSupportActionBar().hide();
+        }
+        catch (NullPointerException e){}
     }
 
     /**
