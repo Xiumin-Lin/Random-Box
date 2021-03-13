@@ -53,6 +53,10 @@ public class MainActivity extends AppCompatActivity {
 
     private static final HashMap<String, String> statsList = new HashMap<>();
 
+    /**
+     * Initiates the values when the app is started
+     * @param savedInstanceState : the instance saved at the moment
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,6 +88,10 @@ public class MainActivity extends AppCompatActivity {
      */
     private void updateBoxStats() {
         DB_STATS.addValueEventListener(new ValueEventListener() {
+            /**
+             * Keeps the Database up to date
+             * @param snapshot : the snapshot
+             */
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 Log.d("rb", "Update box statistics");
@@ -93,6 +101,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            /**
+             * Prints errors in the log
+             * @param error : the error
+             */
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Log.d("rb", "cancel update stats : " + error.getMessage());
