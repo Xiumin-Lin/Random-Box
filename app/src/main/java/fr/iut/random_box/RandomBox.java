@@ -42,14 +42,23 @@ public abstract class RandomBox {
         }
     }
 
+    /**
+     * Returns weather there is an API for this box or not
+     */
     public Boolean needAPI(){
         return !apiUrl.isEmpty();
     }
 
+    /**
+     * Returns the link of the API
+     */
     public String getApiUrl() {
         return apiUrl;
     }
 
+    /**
+     * Returns weather the API returns a JsonObject or not
+     */
     public Boolean hasJsonObject(){
         return hasJsonObject;
     }
@@ -121,6 +130,11 @@ public abstract class RandomBox {
         }
     }
 
+    /**
+     * Returns the data for the box
+     * @param popupView : the view
+     * @param infoActivity : the data from the other page
+     */
     public JsonObjectRequest makeJsonObjectRequest(View popupView, Intent infoActivity){
         return new JsonObjectRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONObject>() {
             @Override
@@ -142,6 +156,11 @@ public abstract class RandomBox {
         });
     }
 
+    /**
+     * Returns the data for the box
+     * @param popupView : the view
+     * @param infoActivity : the data from the other page
+     */
     public JsonArrayRequest makeJsonArrayRequest(View popupView, Intent infoActivity){
         return new JsonArrayRequest(Request.Method.GET, apiUrl, null, new Response.Listener<JSONArray>() {
             @Override
@@ -163,11 +182,21 @@ public abstract class RandomBox {
         });
     }
 
+    /**
+     * Sets the view
+     * @param textViewById : the TextView
+     * @param text : the text that is shown in the view
+     */
     public static void setTextViewContent(TextView textViewById, String text) {
         textViewById.setText(text);
         textViewById.setVisibility(View.VISIBLE);
     }
 
+    /**
+     * Sets the view
+     * @param textViewById : the TextView
+     * @param url : the image
+     */
     public static void setImgViewURL(ImageView textViewById, String url) {
         if (TextUtils.isEmpty(url)){
             Log.d("rb", "The url is empty, can't set ImgView");
